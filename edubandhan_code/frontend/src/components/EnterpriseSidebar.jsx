@@ -16,7 +16,8 @@ import {
   Video,
   ShieldCheck,
   CalendarCheck,
-  Network
+  Network,
+  X
 } from 'lucide-react';
 
 export default function EnterpriseSidebar({
@@ -25,7 +26,9 @@ export default function EnterpriseSidebar({
   activeRole,
   currentUser,
   onLogout,
-  onOpenAuth
+  onOpenAuth,
+  isMobileOpen = false,
+  onCloseMobile
 }) {
   const isParent = activeRole === 'parent' || (currentUser && String(currentUser.role).toUpperCase().includes('PARENT'));
 
@@ -182,73 +185,107 @@ export default function EnterpriseSidebar({
   const roleInfo = getRoleBadge();
 
   return (
-    <aside style={{
-      width: '260px',
-      minWidth: '260px',
-      backgroundColor: '#102A56', // Deep Navy Primary Brand / Trust
-      color: '#FFFFFF',
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100vh',
-      position: 'sticky',
-      top: 0,
-      zIndex: 50,
-      borderRight: '1px solid rgba(255, 255, 255, 0.08)',
-      boxShadow: '4px 0 24px rgba(16, 42, 86, 0.15)'
-    }}>
+    <aside 
+      className={`enterprise-sidebar ${isMobileOpen ? 'mobile-open' : ''}`}
+      style={{
+        backgroundColor: '#102A56', // Deep Navy Primary Brand / Trust
+        color: '#FFFFFF',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+        position: 'sticky',
+        top: 0,
+        zIndex: 50,
+        borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+        boxShadow: '4px 0 24px rgba(16, 42, 86, 0.15)'
+      }}
+    >
       {/* Brand Header */}
       <div
-        onClick={() => onSwitchTab('overview')}
         style={{
-          padding: '24px 20px 20px',
+          padding: '20px 16px',
           display: 'flex',
           alignItems: 'center',
-          gap: '12px',
-          cursor: 'pointer',
+          justifyContent: 'space-between',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
         }}
       >
-        <div style={{
-          width: '42px',
-          height: '42px',
-          borderRadius: '10px',
-          overflow: 'hidden',
-          background: '#030a16',
-          border: '1.5px solid rgba(22, 119, 255, 0.4)',
-          flexShrink: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <img
-            src="/web_app/edubandhan/assets/edubandhan_logo_dark.jpg"
-            alt="EduBandhan Logo"
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            onError={(e) => { e.target.onerror = null; e.target.src = '/edubandhan_logo_dark.jpg'; }}
-          />
-        </div>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{
-              fontWeight: 800,
-              fontSize: '17px',
-              letterSpacing: '-0.2px',
-              color: '#FFFFFF'
-            }}>
-              EDUBANDHAN
-            </span>
-          </div>
-          <p style={{
-            fontSize: '10px',
-            color: '#94A3B8',
-            margin: '2px 0 0',
-            letterSpacing: '0.4px',
-            textTransform: 'uppercase',
-            fontWeight: 600
+        <div
+          onClick={() => {
+            onSwitchTab('overview');
+            onCloseMobile?.();
+          }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            cursor: 'pointer',
+            flex: 1
+          }}
+        >
+          <div style={{
+            width: '42px',
+            height: '42px',
+            borderRadius: '10px',
+            overflow: 'hidden',
+            background: '#030a16',
+            border: '1.5px solid rgba(22, 119, 255, 0.4)',
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}>
-            Connecting Home &amp; School
-          </p>
+            <img
+              src="/web_app/edubandhan/assets/edubandhan_logo_dark.jpg"
+              alt="EduBandhan Logo"
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              onError={(e) => { e.target.onerror = null; e.target.src = '/edubandhan_logo_dark.jpg'; }}
+            />
+          </div>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{
+                fontWeight: 800,
+                fontSize: '17px',
+                letterSpacing: '-0.2px',
+                color: '#FFFFFF'
+              }}>
+                EDUBANDHAN
+              </span>
+            </div>
+            <p style={{
+              fontSize: '10px',
+              color: '#94A3B8',
+              margin: '2px 0 0',
+              letterSpacing: '0.4px',
+              textTransform: 'uppercase',
+              fontWeight: 600
+            }}>
+              Connecting Home &amp; School
+            </p>
+          </div>
         </div>
+
+        {/* Mobile Close Drawer Button */}
+        <button
+          type="button"
+          className="sidebar-mobile-close-btn"
+          onClick={onCloseMobile}
+          aria-label="Close navigation drawer"
+          style={{
+            background: 'rgba(255, 255, 255, 0.12)',
+            border: 'none',
+            color: '#FFFFFF',
+            cursor: 'pointer',
+            padding: '6px',
+            borderRadius: '8px',
+            alignItems: 'center',
+            justifyContent: 'center',
+            display: 'none' // Controlled by CSS media query
+          }}
+        >
+          <X size={20} />
+        </button>
       </div>
 
       {/* Navigation Items */}
@@ -278,7 +315,10 @@ export default function EnterpriseSidebar({
           return (
             <button
               key={item.id}
-              onClick={() => onSwitchTab(item.targetTab)}
+              onClick={() => {
+                onSwitchTab(item.targetTab);
+                onCloseMobile?.();
+              }}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -429,7 +469,11 @@ export default function EnterpriseSidebar({
           </div>
 
           <button
-            onClick={() => currentUser ? onLogout() : onOpenAuth('signin')}
+            onClick={() => {
+              onCloseMobile?.();
+              if (currentUser) onLogout();
+              else onOpenAuth('signin');
+            }}
             title={currentUser ? "Log Out" : "Sign In to EduBandhan"}
             style={{
               background: currentUser ? 'transparent' : 'rgba(22, 119, 255, 0.15)',

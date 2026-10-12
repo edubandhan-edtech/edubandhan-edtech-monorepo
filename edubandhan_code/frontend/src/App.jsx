@@ -82,6 +82,8 @@ export default function App() {
   const [roleSwitchWarning, setRoleSwitchWarning] = useState(null); // targetRole that was restricted
   const lastActivityRef = useRef(Date.now());
 
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
   const [activeRole, setActiveRole] = useState(() => {
     const normalized = getUserNormalizedRole(currentUser);
     if (normalized && ['super_admin', 'admin', 'teacher', 'parent'].includes(normalized)) {
@@ -89,6 +91,11 @@ export default function App() {
     }
     return 'admin'; // Default to School Admin
   });
+
+  // Automatically close mobile navigation drawer on tab transition
+  useEffect(() => {
+    setIsMobileNavOpen(false);
+  }, [activeTab]);
 
   // Keep activeRole strictly synchronized with authenticated currentUser
   useEffect(() => {
@@ -474,14 +481,30 @@ export default function App() {
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      minHeight: '100vh',
-      backgroundColor: theme === 'dark' ? '#071527' : '#F7F9FC', // Dynamic Dark / Light Background
-      color: theme === 'dark' ? '#F8FAFC' : '#12213A',
-      fontFamily: 'var(--font-sans)',
-      transition: 'background-color 0.2s ease, color 0.2s ease'
-    }}>
+    <div 
+      className="app-root-layout"
+      style={{
+        display: 'flex',
+        minHeight: '100vh',
+        width: '100%',
+        maxWidth: '100vw',
+        overflowX: 'hidden',
+        backgroundColor: theme === 'dark' ? '#071527' : '#F7F9FC', // Dynamic Dark / Light Background
+        color: theme === 'dark' ? '#F8FAFC' : '#12213A',
+        fontFamily: 'var(--font-sans)',
+        transition: 'background-color 0.2s ease, color 0.2s ease',
+        position: 'relative'
+      }}
+    >
+      {/* Mobile Drawer Backdrop Overlay */}
+      {isMobileNavOpen && (
+        <div 
+          className="sidebar-mobile-backdrop"
+          onClick={() => setIsMobileNavOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* 1. Deep Navy Enterprise SaaS Sidebar */}
       <EnterpriseSidebar
         activeTab={activeTab}
@@ -491,16 +514,24 @@ export default function App() {
         currentUser={currentUser}
         onLogout={handleLogout}
         onOpenAuth={handleOpenAuth}
+        isMobileOpen={isMobileNavOpen}
+        onCloseMobile={() => setIsMobileNavOpen(false)}
       />
 
       {/* 2. Main Layout Column */}
-      <div style={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        minWidth: 0,
-        minHeight: '100vh'
-      }}>
+      <div 
+        className="app-main-column"
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          minWidth: 0,
+          width: '100%',
+          maxWidth: '100%',
+          minHeight: '100vh',
+          overflowX: 'hidden'
+        }}
+      >
         {/* Enterprise Top Bar */}
         <EnterpriseTopBar
           activeRole={activeRole}
@@ -511,6 +542,7 @@ export default function App() {
           theme={theme}
           onToggleTheme={handleToggleTheme}
           onOpenNoticeBoard={() => setShowNoticeBoardModal(true)}
+          onToggleMobileNav={() => setIsMobileNavOpen(prev => !prev)}
           onSearch={(query) => {
             const isParent = activeRole === 'parent' || (currentUser && String(currentUser.role).toUpperCase().includes('PARENT'));
             if (query.toLowerCase().includes('fee')) navigateToTab('fees');
@@ -530,18 +562,21 @@ export default function App() {
 
         {/* Read-Only Guest Explorer Banner */}
         {!currentUser && (
-          <div style={{
-            background: 'linear-gradient(90deg, rgba(14, 165, 233, 0.14) 0%, rgba(37, 99, 235, 0.12) 100%)',
-            borderBottom: '1px solid rgba(56, 189, 248, 0.25)',
-            padding: '7px 24px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            fontSize: '12px',
-            color: '#38BDF8',
-            fontWeight: 600,
-            backdropFilter: 'blur(8px)'
-          }}>
+          <div 
+            className="guest-explorer-banner"
+            style={{
+              background: 'linear-gradient(90deg, rgba(14, 165, 233, 0.14) 0%, rgba(37, 99, 235, 0.12) 100%)',
+              borderBottom: '1px solid rgba(56, 189, 248, 0.25)',
+              padding: '7px 24px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              fontSize: '12px',
+              color: '#38BDF8',
+              fontWeight: 600,
+              backdropFilter: 'blur(8px)'
+            }}
+          >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '13px' }}>👁️</span>
               <span>
@@ -571,23 +606,20 @@ export default function App() {
         )}
 
         {/* Dynamic Main Viewport Row with Right Campus Vitality Rail */}
-        <div style={{
-          display: 'flex',
-          flex: 1,
-          minHeight: 0,
-          position: 'relative'
-        }}>
-          {/* Main Content Viewport */}
-          <main style={{
+        <div 
+          className="app-content-row"
+          style={{
+            display: 'flex',
             flex: 1,
-            padding: '28px 32px',
-            overflowY: 'auto',
-            maxWidth: '1440px',
+            minHeight: 0,
             width: '100%',
-            boxSizing: 'border-box',
-            margin: '0 auto',
-            minWidth: 0
-          }}>
+            maxWidth: '100%',
+            minWidth: 0,
+            position: 'relative'
+          }}
+        >
+          {/* Main Content Viewport */}
+          <main className="main-content-viewport">
             {/* Back Navigation Bar (shown when navigated away from default role dashboard) */}
             {!['admin', 'parent_hub', 'teacher'].includes(activeTab) && (
               <NavigationBackBar

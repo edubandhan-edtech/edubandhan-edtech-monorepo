@@ -611,7 +611,7 @@ export default function StudentTeacherManagement({ onSwitchTab, onRequireAuth, c
           {/* Class Rooms Grid */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
             gap: '16px'
           }}>
             {classRooms.map((room) => {

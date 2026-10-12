@@ -15,7 +15,8 @@ import {
   UserPlus,
   Sun,
   Moon,
-  Megaphone
+  Megaphone,
+  Menu
 } from 'lucide-react';
 
 export default function EnterpriseTopBar({ 
@@ -27,7 +28,8 @@ export default function EnterpriseTopBar({
   onSearch,
   theme = 'light',
   onToggleTheme,
-  onOpenNoticeBoard
+  onOpenNoticeBoard,
+  onToggleMobileNav
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
@@ -88,10 +90,35 @@ export default function EnterpriseTopBar({
         boxSizing: 'border-box'
       }}
     >
-      {/* Global Search Bar */}
-      <form 
-        onSubmit={handleSearchSubmit}
-        className="topbar-search-form"
+      {/* Left Search and Mobile Drawer Hamburger */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: '1 1 auto', minWidth: 0 }}>
+        {/* Mobile Hamburger Drawer Button */}
+        <button
+          type="button"
+          className="topbar-mobile-menu-btn"
+          onClick={onToggleMobileNav}
+          aria-label="Open Navigation Drawer"
+          style={{
+            background: isDark ? 'rgba(255, 255, 255, 0.08)' : '#F1F5F9',
+            border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.12)' : '#E2E8F0'}`,
+            color: isDark ? '#F8FAFC' : '#102A56',
+            width: '38px',
+            height: '38px',
+            borderRadius: '8px',
+            display: 'none', // Controlled by CSS media query
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            flexShrink: 0
+          }}
+        >
+          <Menu size={20} />
+        </button>
+
+        {/* Global Search Bar */}
+        <form 
+          onSubmit={handleSearchSubmit}
+          className="topbar-search-form"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -144,9 +171,10 @@ export default function EnterpriseTopBar({
           ⌘K
         </span>
       </form>
+      </div>
 
-      {/* Right Controls: 3-Role Switcher, Date, Notifications, User */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+      {/* Right Controls: 4-Role Switcher, Date, Notifications, User */}
+      <div className="topbar-right-controls" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
         
         {/* 3-Role Experience Switcher */}
         <div 
@@ -164,16 +192,17 @@ export default function EnterpriseTopBar({
           }}
         >
           {[
-            { id: 'super_admin', label: '⚡ Super Admin' },
-            { id: 'admin', label: '👑 Admin' },
-            { id: 'teacher', label: '👩‍🏫 Teacher' },
-            { id: 'parent', label: '👨‍👩‍👦 Parent' }
+            { id: 'super_admin', label: '⚡ Super Admin', short: '⚡ Super' },
+            { id: 'admin', label: '👑 Admin', short: '👑 Admin' },
+            { id: 'teacher', label: '👩‍🏫 Teacher', short: '👩‍🏫 Teach' },
+            { id: 'parent', label: '👨‍👩‍👦 Parent', short: '👨‍👩‍👦 Parent' }
           ].map(r => {
             const isActive = activeRole === r.id;
             return (
               <button
                 key={r.id}
                 onClick={() => onSwitchRole(r.id)}
+                className={`topbar-role-btn ${isActive ? 'active' : ''}`}
                 title={
                   currentUser && !isActive
                     ? `Cannot switch to ${r.label} while logged in as ${currentUser.role}. Click to switch role.`
@@ -188,7 +217,7 @@ export default function EnterpriseTopBar({
                   color: isActive ? (isDark ? '#38BDF8' : '#102A56') : (isDark ? '#94A3B8' : '#64748B'),
                   fontWeight: isActive ? 700 : 500,
                   fontSize: '12px',
-                  padding: '0 10px',
+                  padding: '0 8px',
                   borderRadius: '6px',
                   cursor: 'pointer',
                   boxShadow: isActive ? '0 1px 2px rgba(0,0,0,0.08)' : 'none',
@@ -196,7 +225,8 @@ export default function EnterpriseTopBar({
                   whiteSpace: 'nowrap'
                 }}
               >
-                {r.label}
+                <span className="role-btn-full">{r.label}</span>
+                <span className="role-btn-short">{r.short}</span>
               </button>
             );
           })}
@@ -232,6 +262,7 @@ export default function EnterpriseTopBar({
         {/* Public Notice Board Loader / Bulletin Trigger */}
         <button
           onClick={onOpenNoticeBoard}
+          className="topbar-notice-btn"
           title="Open Campus Public Notice Board (Loader Bulletin)"
           style={{
             height: '38px',
@@ -432,6 +463,7 @@ export default function EnterpriseTopBar({
           }}>
             <button
               onClick={() => onOpenAuth('signin')}
+              className="topbar-signin-btn"
               title="Sign In with existing account"
               style={{
                 height: '38px',
@@ -465,6 +497,7 @@ export default function EnterpriseTopBar({
 
             <button
               onClick={() => onOpenAuth('register')}
+              className="topbar-register-btn"
               title="Register a new student, parent, or faculty account"
               style={{
                 height: '38px',
