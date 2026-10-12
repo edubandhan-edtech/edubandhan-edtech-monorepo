@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
@@ -112,11 +112,8 @@ def health_check():
             "version": "1.0.0"
         }
 
-@app.get("/web_app/edubandhan", response_class=HTMLResponse)
-@app.get("/web_app/edubandhan/", response_class=HTMLResponse)
-@app.get("/web_app/edubandhan/{full_path:path}", response_class=HTMLResponse)
-def serve_web_app(full_path: str = ""):
-    # Priority 1: React Single Page Application (Production Build)
+@app.get("/", response_class=HTMLResponse)
+def serve_root():
     react_index = os.path.join(FRONTEND_DIST, "index.html")
     if os.path.exists(react_index):
         return FileResponse(
@@ -128,20 +125,23 @@ def serve_web_app(full_path: str = ""):
                 "Expires": "0"
             }
         )
-    
-    # Priority 2: Standalone HTML fallback
     html_path = os.path.join(BASE_DIR, "edubandhan_app.html")
     if os.path.exists(html_path):
         with open(html_path, "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read())
-            
     return HTMLResponse(content="<h1>EduBandhan Backend API is Live</h1><p>Visit /docs for Swagger UI</p>")
 
-@app.get("/")
+@app.get("/web_app/edubandhan")
+@app.get("/web_app/edubandhan/")
+@app.get("/web_app/edubandhan/{full_path:path}")
+def legacy_web_app_redirect(full_path: str = ""):
+    target = f"/{full_path}" if full_path else "/"
+    return RedirectResponse(url=target, status_code=301)
+
 @app.get("/web-api/edubandhan_ui")
 @app.get("/web-api/edubandhan_ui/")
-def root_redirect():
-    return RedirectResponse(url="/web_app/edubandhan", status_code=307)
+def legacy_ui_redirect():
+    return RedirectResponse(url="/", status_code=301)
 
 CLIENT_TABS = {
     "organization", "super_admin", "admin", "teacher", "parent_hub",
@@ -149,10 +149,20 @@ CLIENT_TABS = {
     "leaves", "quiz", "aichat", "attendance_view", "overview", "parent"
 }
 
-@app.get("/{tab_name}")
-def direct_tab_redirect(tab_name: str):
+@app.get("/{tab_name}", response_class=HTMLResponse)
+def direct_tab_route(tab_name: str):
     if tab_name in CLIENT_TABS:
-        return RedirectResponse(url=f"/web_app/edubandhan/{tab_name}", status_code=307)
+        react_index = os.path.join(FRONTEND_DIST, "index.html")
+        if os.path.exists(react_index):
+            return FileResponse(
+                react_index, 
+                media_type="text/html",
+                headers={
+                    "Cache-Control": "no-cache, no-store, must-revalidate",
+                    "Pragma": "no-cache",
+                    "Expires": "0"
+                }
+            )
     raise HTTPException(status_code=404, detail="Page not found")
 
 

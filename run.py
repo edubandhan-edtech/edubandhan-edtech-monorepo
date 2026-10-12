@@ -167,7 +167,7 @@ def main():
         verify_neon_connection()
 
     # 3. Print access information
-    app_url = f"http://localhost:{args.port}/web_app/edubandhan"
+    app_url = f"http://localhost:{args.port}"
     root_url = f"http://localhost:{args.port}"
     docs_url = f"http://localhost:{args.port}/docs"
     health_url = f"http://localhost:{args.port}/api/health"
