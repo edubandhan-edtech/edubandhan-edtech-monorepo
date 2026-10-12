@@ -133,9 +133,9 @@ def verify_neon_connection():
             res = cur.fetchone()
             cur.execute("SELECT count(*) FROM students;")
             student_count = cur.fetchone()["count"]
-            print(f"[+] ✅ Neon PostgreSQL Connected Successfully! (DB: '{res['current_database']}', Students: {student_count})")
+            print(f"[+] Neon PostgreSQL Connected Successfully! (DB: '{res['current_database']}', Students: {student_count})")
     except Exception as e:
-        print(f"[!] ❌ Neon PostgreSQL Connection Warning: {e}")
+        print(f"[!]  Neon PostgreSQL Connection Warning: {e}")
 
 def main():
     parser = argparse.ArgumentParser(description="EduBandhan (एडूबंधन) Master Unified Launcher")
@@ -197,6 +197,10 @@ def main():
         port=args.port,
         reload=args.reload,
         app_dir=str(CODE_DIR)
+    )
+
+if __name__ == "__main__":
+    main()
     )
 
 if __name__ == "__main__":
