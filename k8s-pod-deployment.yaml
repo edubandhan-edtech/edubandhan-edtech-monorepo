@@ -1,0 +1,76 @@
+# =============================================================================
+# EduBandhan — Single-Pod Kubernetes Deployment & Service Manifest
+# Both React Frontend & FastAPI Backend run inside 1 Pod (Port 8000)
+# No API Gateway Mapping Needed • Zero CORS • Internal Native Routing
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edubandhan-app
+  labels:
+    app: edubandhan
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: edubandhan
+  template:
+    metadata:
+      labels:
+        app: edubandhan
+    spec:
+      containers:
+      - name: edubandhan
+        image: edubandhan:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+          name: http-unified
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: edubandhan-secrets
+              key: database-url
+        - name: GROQ_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: edubandhan-secrets
+              key: groq-api-key
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: edubandhan-secrets
+              key: jwt-secret
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: edubandhan-service
+spec:
+  type: ClusterIP
+  selector:
+    app: edubandhan
+  ports:
+  - port: 80
+    targetPort: 8000
+    name: http
