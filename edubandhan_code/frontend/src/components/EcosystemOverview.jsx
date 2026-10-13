@@ -289,7 +289,7 @@ export default function EcosystemOverview({
             </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                <h2 className="chalk-font chalk-text-yellow" style={{ fontSize: '32px', fontWeight: 700, margin: 0, lineHeight: 1.1 }}>
+                <h2 className="chalk-font chalk-text-yellow" style={{ fontSize: 'clamp(20px, 4.5vw, 32px)', fontWeight: 700, margin: 0, lineHeight: 1.15 }}>
                   EduBandhan — Smart Classroom &amp; Academic Lab
                 </h2>
                 <span style={{
@@ -316,23 +316,29 @@ export default function EcosystemOverview({
                   विद्या ददाति विनयम
                 </span>
               </div>
-              <p className="chalk-font chalk-text-white" style={{ fontSize: '18px', margin: '4px 0 0', opacity: 0.95 }}>
+              <p className="chalk-font chalk-text-white" style={{ fontSize: 'clamp(13px, 3.2vw, 17px)', margin: '6px 0 0', opacity: 0.95, lineHeight: 1.4 }}>
                 "Nurturing Minds, Building Futures &bull; The Sacred Bond Connecting Child, Parent &amp; School"
               </p>
             </div>
           </div>
 
           {/* Blackboard Chalk Tray with Authentic Laboratory & Scholastic Instruments */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '16px',
-            background: 'rgba(0, 0, 0, 0.42)',
-            padding: '8px 18px',
-            borderRadius: '12px',
-            border: '1.5px dashed rgba(254, 240, 138, 0.4)',
-            boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.4)'
-          }}>
+          <div 
+            className="blackboard-chalk-tray"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '14px',
+              background: 'rgba(0, 0, 0, 0.42)',
+              padding: '8px 16px',
+              borderRadius: '12px',
+              border: '1.5px dashed rgba(254, 240, 138, 0.4)',
+              boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.4)',
+              maxWidth: '100%',
+              boxSizing: 'border-box'
+            }}
+          >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} title="Precision Mathematical Instruments">
               <GeometryCompassIcon size={22} />
               <span className="chalk-font chalk-text-cyan" style={{ fontSize: '16px' }}>a² + b² = c²</span>

@@ -1112,6 +1112,10 @@ input::placeholder, textarea::placeholder {
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease;
 }
 
+.topbar-mobile-menu-btn {
+  display: none;
+}
+
 /* Mobile Off-Canvas Drawer (Android & Tablet Viewports <= 1024px) */
 @media (max-width: 1024px) {
   .enterprise-sidebar {
@@ -1231,13 +1235,18 @@ input::placeholder, textarea::placeholder {
     display: none !important;
   }
   .topbar-role-switcher {
-    max-width: 210px !important;
+    max-width: 175px !important;
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    flex-shrink: 1 !important;
   }
   .topbar-role-switcher::-webkit-scrollbar {
     display: none;
+  }
+  .topbar-role-btn {
+    padding: 0 6px !important;
+    font-size: 11px !important;
   }
   .role-btn-full {
     display: none !important;
@@ -1248,10 +1257,26 @@ input::placeholder, textarea::placeholder {
   .topbar-register-btn {
     display: none !important;
   }
+  .topbar-notice-btn {
+    padding: 0 8px !important;
+    height: 36px !important;
+  }
+  .topbar-notice-label {
+    display: none !important;
+  }
 }
 
 /* Universal Android & Mobile Portrait Grid Safety Guard */
 @media (max-width: 640px) {
+  .topbar-signin-btn span {
+    display: none !important;
+  }
+  .topbar-signin-btn {
+    padding: 0 8px !important;
+    width: 36px !important;
+    height: 36px !important;
+    justify-content: center !important;
+  }
   div[style*="minmax(3"],
   div[style*="minmax(4"] {
     grid-template-columns: 1fr !important;
@@ -1265,6 +1290,10 @@ input::placeholder, textarea::placeholder {
     flex-direction: column !important;
     align-items: flex-start !important;
     gap: 8px !important;
+  }
+  .blackboard-chalk-tray {
+    gap: 8px !important;
+    padding: 6px 10px !important;
   }
 }
 

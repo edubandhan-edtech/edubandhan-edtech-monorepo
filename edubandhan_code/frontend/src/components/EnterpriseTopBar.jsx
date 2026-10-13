@@ -91,7 +91,15 @@ export default function EnterpriseTopBar({
       }}
     >
       {/* Left Search and Mobile Drawer Hamburger */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: '1 1 auto', minWidth: 0 }}>
+      <div 
+        className="topbar-left-controls"
+        style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '10px', 
+          flexShrink: 0 
+        }}
+      >
         {/* Mobile Hamburger Drawer Button */}
         <button
           type="button"
@@ -105,7 +113,6 @@ export default function EnterpriseTopBar({
             width: '38px',
             height: '38px',
             borderRadius: '8px',
-            display: 'none', // Controlled by CSS media query
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
@@ -174,7 +181,17 @@ export default function EnterpriseTopBar({
       </div>
 
       {/* Right Controls: 4-Role Switcher, Date, Notifications, User */}
-      <div className="topbar-right-controls" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+      <div 
+        className="topbar-right-controls" 
+        style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '10px', 
+          flex: '1 1 auto', 
+          minWidth: 0, 
+          justifyContent: 'flex-end' 
+        }}
+      >
         
         {/* 3-Role Experience Switcher */}
         <div 
