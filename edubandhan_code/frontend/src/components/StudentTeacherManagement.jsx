@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Users, 
-  Search, 
-  Filter, 
-  MoreVertical, 
-  CheckCircle2, 
-  Clock, 
-  ShieldCheck, 
-  Plus, 
-  Download, 
-  Eye, 
-  Mail, 
+import {
+  Users,
+  Search,
+  Filter,
+  MoreVertical,
+  CheckCircle2,
+  Clock,
+  ShieldCheck,
+  Plus,
+  Download,
+  Eye,
+  Mail,
   CalendarOff,
   GraduationCap,
   School,
@@ -277,9 +277,9 @@ export default function StudentTeacherManagement({ onSwitchTab, onRequireAuth, c
   ];
 
   const filteredStudents = studentsData.filter(s => {
-    const matchesSearch = s.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          s.rollNo.includes(searchTerm) ||
-                          s.guardian.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      s.rollNo.includes(searchTerm) ||
+      s.guardian.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesClass = classFilter === 'all' || s.grade === classFilter;
     return matchesSearch && matchesClass;
   });
@@ -287,13 +287,13 @@ export default function StudentTeacherManagement({ onSwitchTab, onRequireAuth, c
   const filteredTeachers = (teachersList.length > 0 ? teachersList : teachersData).filter(t => {
     const name = t.full_name || t.name || '';
     const dept = t.assigned_classes || t.department || '';
-    return name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-           dept.toLowerCase().includes(searchTerm.toLowerCase());
+    return name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      dept.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
-      
+
       {/* Page Title & Controls */}
       <div style={{
         display: 'flex',
@@ -530,8 +530,8 @@ export default function StudentTeacherManagement({ onSwitchTab, onRequireAuth, c
             gap: '8px'
           }}>
             <Search size={14} color="var(--text-muted)" />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder={`Search ${activeTab === 'class_rooms' ? 'rooms...' : activeTab}...`}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -551,7 +551,7 @@ export default function StudentTeacherManagement({ onSwitchTab, onRequireAuth, c
       {/* TAB CONTENT 1: CLASSROOM SOCKETS & ROOMS */}
       {activeTab === 'class_rooms' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          
+
           {/* Informative Guidance Banner */}
           <div style={{
             background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.12) 0%, rgba(14, 165, 233, 0.06) 100%)',
@@ -611,7 +611,7 @@ export default function StudentTeacherManagement({ onSwitchTab, onRequireAuth, c
           {/* Class Rooms Grid */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
             gap: '16px'
           }}>
             {classRooms.map((room) => {
@@ -619,7 +619,7 @@ export default function StudentTeacherManagement({ onSwitchTab, onRequireAuth, c
               const roomKey = room.room_key || `class-${room.grade.toLowerCase()}${room.section.toLowerCase()}`;
 
               return (
-                <div 
+                <div
                   key={room.id}
                   className="glass-panel"
                   style={{
@@ -637,7 +637,7 @@ export default function StudentTeacherManagement({ onSwitchTab, onRequireAuth, c
                   }}
                 >
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    
+
                     {/* Top Row: Class Title & Socket Pill */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                       <div>
@@ -756,7 +756,7 @@ export default function StudentTeacherManagement({ onSwitchTab, onRequireAuth, c
                       <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                         {assignedTeachers.length > 0 ? (
                           assignedTeachers.map((t, idx) => (
-                            <span 
+                            <span
                               key={idx}
                               style={{
                                 backgroundColor: 'var(--bg-surface)',
@@ -854,7 +854,7 @@ export default function StudentTeacherManagement({ onSwitchTab, onRequireAuth, c
             </thead>
             <tbody>
               {filteredStudents.map((stu) => (
-                <tr 
+                <tr
                   key={stu.id}
                   style={{ borderBottom: '1px solid var(--border-subtle)', transition: 'background-color 0.15s ease' }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-surface-hover)'}
@@ -989,7 +989,7 @@ export default function StudentTeacherManagement({ onSwitchTab, onRequireAuth, c
             </thead>
             <tbody>
               {filteredTeachers.map((tch, idx) => (
-                <tr 
+                <tr
                   key={tch.id || idx}
                   style={{ borderBottom: '1px solid var(--border-subtle)', transition: 'background-color 0.15s ease' }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-surface-hover)'}
@@ -1128,7 +1128,7 @@ export default function StudentTeacherManagement({ onSwitchTab, onRequireAuth, c
             </div>
 
             <form onSubmit={handleCreateClassRoom} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              
+
               {/* Grade & Section */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                 <div>

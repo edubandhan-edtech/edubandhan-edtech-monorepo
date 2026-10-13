@@ -131,8 +131,22 @@ def serve_root():
             return HTMLResponse(content=f.read())
     return HTMLResponse(content="<h1>EduBandhan Backend API is Live</h1><p>Visit /docs for Swagger UI</p>")
 
-@app.get("/web_app/edubandhan")
-@app.get("/web_app/edubandhan/")
+@app.get("/web_app/edubandhan", response_class=HTMLResponse)
+@app.get("/web_app/edubandhan/", response_class=HTMLResponse)
+def serve_web_app():
+    react_index = os.path.join(FRONTEND_DIST, "index.html")
+    if os.path.exists(react_index):
+        return FileResponse(
+            react_index, 
+            media_type="text/html",
+            headers={
+                "Cache-Control": "no-cache, no-store, must-revalidate",
+                "Pragma": "no-cache",
+                "Expires": "0"
+            }
+        )
+    return RedirectResponse(url="/", status_code=301)
+
 @app.get("/web_app/edubandhan/{full_path:path}")
 def legacy_web_app_redirect(full_path: str = ""):
     target = f"/{full_path}" if full_path else "/"
