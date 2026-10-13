@@ -13,7 +13,10 @@ import {
   Award
 } from 'lucide-react';
 
-export default function ParentPulse() {
+export default function ParentPulse({ currentUser, onSwitchTab }) {
+  const guardianName = currentUser?.name || currentUser?.full_name || "Ramesh Sharma";
+  const studentName = currentUser?.child_name || "Aarav Sharma";
+
   const days = [
     { day: 1, status: "P" }, { day: 2, status: "P" }, { day: 3, status: "P" },
     { day: 4, status: "P" }, { day: 5, status: "P" }, { day: 6, status: "H" }, { day: 7, status: "H" },
@@ -55,7 +58,7 @@ export default function ParentPulse() {
               Parent Mobile Pulse Hub
             </h2>
             <p style={{ fontSize: '12px', color: 'var(--text-cyan)', margin: '3px 0 0 0' }}>
-              Aarav Sharma (Class 8-A) &bull; Guardian: Ramesh Sharma(Aarav Sharma) &bull; Instant Gate &amp; Bus GPS Alerts
+              {studentName} (Class 8-B) &bull; Guardian: {guardianName} &bull; Instant Gate &amp; Bus GPS Alerts
             </p>
           </div>
         </div>

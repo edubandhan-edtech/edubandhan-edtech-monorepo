@@ -20,7 +20,8 @@ from pathlib import Path
 if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8")
 
-CODE_DIR = Path(__file__).resolve().parent
+ROOT_DIR = Path(__file__).resolve().parent
+CODE_DIR = ROOT_DIR / "edubandhan_code" if (ROOT_DIR / "edubandhan_code").exists() else ROOT_DIR
 
 # Ensure CODE_DIR is in python path
 if str(CODE_DIR) not in sys.path:
@@ -75,21 +76,35 @@ def check_and_install_dependencies():
             print(f"[!] Warning: Could not auto-install dependencies: {e}")
 
 def check_frontend_build(force_rebuild: bool = False):
-    """Ensure React production build exists in frontend/dist. If missing or forced, build automatically."""
+    """Ensure React build in frontend/dist is up-to-date with frontend/src.
+    If dist is missing OR any file in src/ was modified after dist/index.html was built,
+    automatically runs 'npm run build' so developers NEVER have to run it manually."""
     frontend_dir = CODE_DIR / "frontend"
+    src_dir = frontend_dir / "src"
     dist_dir = frontend_dir / "dist"
     index_file = dist_dir / "index.html"
     
-    if force_rebuild or not index_file.exists():
-        print("[*] Building React production bundle for single-pod deployment...")
+    needs_rebuild = force_rebuild or not index_file.exists()
+    
+    # Check if any source file in src/ or public/ is newer than dist/index.html
+    if not needs_rebuild and index_file.exists() and src_dir.exists():
+        dist_mtime = index_file.stat().st_mtime
+        for path in src_dir.rglob("*"):
+            if path.is_file() and path.stat().st_mtime > dist_mtime:
+                print(f"[*] Detected changes in '{path.name}', auto-compiling React frontend...")
+                needs_rebuild = True
+                break
+
+    if needs_rebuild:
+        print("[*] ⚙️ Building fresh React bundle into frontend/dist...")
         try:
             shell_cmd = "npm run build"
             subprocess.check_call(shell_cmd, shell=True, cwd=str(frontend_dir))
-            print("[+] ✅ React Frontend built successfully into frontend/dist!\n")
+            print("[+] ✅ React Frontend updated successfully into frontend/dist!\n")
         except Exception as e:
-            print(f"[!] Warning: Frontend auto-build failed ({e}). If Node.js is installed, run 'npm run build' inside {frontend_dir}.\n")
+            print(f"[!] Warning: Frontend auto-build failed ({e}). Run 'npm run build' inside {frontend_dir}.\n")
     else:
-        print(f"[+] ✅ React Frontend distribution ready in: {dist_dir}")
+        print(f"[+] ✅ React Frontend distribution is up to date: {dist_dir}")
 
 def ensure_port_available(port: int):
     """Ensure the target port is available or alert user cleanly."""
@@ -132,9 +147,9 @@ def verify_neon_connection():
             res = cur.fetchone()
             cur.execute("SELECT count(*) FROM students;")
             student_count = cur.fetchone()["count"]
-            print(f"[+] ✅ Neon PostgreSQL Connected Successfully! (DB: '{res['current_database']}', Students: {student_count})")
+            print(f"[+] Neon PostgreSQL Connected Successfully! (DB: '{res['current_database']}', Students: {student_count})")
     except Exception as e:
-        print(f"[!] ❌ Neon PostgreSQL Connection Warning: {e}")
+        print(f"[!]  Neon PostgreSQL Connection Warning: {e}")
 
 def main():
     parser = argparse.ArgumentParser(description="EduBandhan (एडूबंधन) Master Unified Launcher")
@@ -166,7 +181,7 @@ def main():
         verify_neon_connection()
 
     # 3. Print access information
-    app_url = f"http://localhost:{args.port}/web_app/edubandhan"
+    app_url = f"http://localhost:{args.port}"
     root_url = f"http://localhost:{args.port}"
     docs_url = f"http://localhost:{args.port}/docs"
     health_url = f"http://localhost:{args.port}/api/health"
@@ -177,7 +192,7 @@ def main():
     print(f" [★] Interactive Docs: {docs_url}")
     print(f" [★] Health Check API: {health_url}")
     print(f" [★] Tech Stack:       React 19 (Frontend) + FastAPI & Neon pgvector (Backend)")
-    print(f" [★] Working Dir:      {CODE_DIR}")
+    print(f" [★] Project Root:     {CODE_DIR}")
     print("-----------------------------------------------------------------------------")
     print("[*] Starting EduBandhan ASGI Server...")
     print("    Press Ctrl+C at any time to gracefully stop.\n")

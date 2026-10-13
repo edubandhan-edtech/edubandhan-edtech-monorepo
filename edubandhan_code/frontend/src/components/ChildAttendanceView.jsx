@@ -24,11 +24,11 @@ export default function ChildAttendanceView({ currentUser, onSwitchTab }) {
   const [downloadNotice, setDownloadNotice] = useState(false);
 
   const childInfo = {
-    name: "Aarav Sharma",
-    grade: "Class 5 - Section B",
-    rollNo: "14",
-    studentId: "DPS-2026-0801",
-    school: "Green Valley High School",
+    name: currentUser?.child_name || "Aarav Sharma",
+    grade: currentUser?.child_class || "Class 8 - Section B",
+    rollNo: currentUser?.child_roll || "2",
+    studentId: currentUser?.child_admission_no || "DPS-2026-0802",
+    school: currentUser?.school_name || "Delhi Public School",
     teacher: "Mrs. Sunita Sharma (Class Head)"
   };
 

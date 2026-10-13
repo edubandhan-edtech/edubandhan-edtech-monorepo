@@ -29,16 +29,31 @@ def manual_mark_attendance(req: AttendanceOverrideRequest):
         raise HTTPException(status_code=400, detail="Invalid attendance status")
 
     with get_db_cursor(commit=True) as cur:
+        # Resolve student, school_id and class_id
+        cur.execute("""
+            SELECT id, school_id, class_id, first_name, last_name, roll_number
+            FROM students
+            WHERE id::text = %s OR admission_number = %s;
+        """, (req.student_id, req.student_id))
+        student = cur.fetchone()
+        if not student:
+            raise HTTPException(status_code=404, detail="Student not found")
+
+        student_actual_id = str(student["id"])
         log_id = str(uuid.uuid4())
         cur.execute("""
-            INSERT INTO attendance_logs (id, student_id, log_date, check_in_time, status, verification_mode, confidence_score, notification_sent)
-            VALUES (%s, %s, CURRENT_DATE, CURRENT_TIME, %s, 'MANUAL_TEACHER', 1.0, TRUE)
+            INSERT INTO attendance_logs (id, school_id, class_id, student_id, log_date, check_in_time, status, confidence_score, verified_by_kiosk, override_reason)
+            VALUES (%s, %s, %s, %s, CURRENT_DATE, CURRENT_TIME, %s, 1.0, FALSE, %s)
             ON CONFLICT (student_id, log_date)
-            DO UPDATE SET status = %s, verification_mode = 'MANUAL_TEACHER', notification_sent = TRUE
+            DO UPDATE SET status = %s, check_in_time = CURRENT_TIME, verified_by_kiosk = FALSE, override_reason = %s
             RETURNING id, student_id, status, check_in_time;
-        """, (log_id, req.student_id, req.status, req.status))
+        """, (log_id, student["school_id"], student["class_id"], student_actual_id, req.status, req.notes, req.status, req.notes))
         row = cur.fetchone()
-        return {"message": f"Attendance marked as {req.status}", "record": row}
+        return {
+            "message": f"Attendance marked as {req.status}",
+            "student_name": f"{student['first_name']} {student['last_name']}",
+            "record": row
+        }
 
 class ConsultationDecisionRequest(BaseModel):
     booking_id: str

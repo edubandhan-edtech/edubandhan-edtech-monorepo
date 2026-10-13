@@ -44,9 +44,9 @@ def get_parent_children(parent_user_id: str):
             JOIN schools sch ON sch.id = s.school_id
             LEFT JOIN attendance_logs a ON a.student_id = s.id AND a.log_date = CURRENT_DATE
             LEFT JOIN attendance_logs al ON al.student_id = s.id AND al.log_date >= (CURRENT_DATE - INTERVAL '30 days')
-            WHERE g.user_id = %s OR g.id = %s
+            WHERE g.user_id::text = %s OR g.id::text = %s
             GROUP BY s.id, c.id, sch.id, a.status, a.check_in_time, a.confidence_score;
-        """, (parent_user_id, parent_user_id))
+        """, (str(parent_user_id), str(parent_user_id)))
         children = cur.fetchall()
 
         # Fallback demo child if not linked

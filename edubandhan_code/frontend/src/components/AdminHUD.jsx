@@ -147,11 +147,11 @@ export default function AdminHUD({ onSwitchTab, onRequireAuth, currentUser }) {
             Dashboard
           </h1>
           <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>
-            Good morning, Rahul! Here's what's happening at your school today.
+            Welcome back, {currentUser?.name || currentUser?.full_name || 'Administrator'}! Here's what's happening at your school today.
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
           <button
             onClick={() => onSwitchTab('organization')}
             style={{
@@ -381,7 +381,7 @@ export default function AdminHUD({ onSwitchTab, onRequireAuth, currentUser }) {
       {/* 3. Main Dashboard Body: Chart + Recent Activities + AI Mentor */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
         gap: '20px'
       }}>
 

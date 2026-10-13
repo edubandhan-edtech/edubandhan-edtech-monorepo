@@ -20,11 +20,11 @@ import NoticeBoardHub from './NoticeBoardHub';
 
 export default function ParentDashboard({ onSwitchTab, onRequireAuth, currentUser }) {
   const childInfo = {
-    name: "Aarav Sharma",
-    grade: "Class 5 - Section B",
-    school: "Green Valley High School",
-    rollNo: "14",
-    avatar: "A"
+    name: currentUser?.child_name || "Aarav Sharma",
+    grade: currentUser?.child_class || "Class 8 - Section B",
+    school: currentUser?.school_name || "Delhi Public School",
+    rollNo: currentUser?.child_roll || "2",
+    avatar: (currentUser?.child_name || "Aarav")[0].toUpperCase()
   };
 
   const latestUpdates = [
