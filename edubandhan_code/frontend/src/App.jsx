@@ -92,11 +92,6 @@ export default function App() {
     return 'admin'; // Default to School Admin
   });
 
-  // Automatically close mobile navigation drawer on tab transition
-  useEffect(() => {
-    setIsMobileNavOpen(false);
-  }, [activeTab]);
-
   // Keep activeRole strictly synchronized with authenticated currentUser
   useEffect(() => {
     if (currentUser) {
@@ -174,6 +169,11 @@ export default function App() {
   const [activeTab, setActiveTab] = useState(() => {
     return resolveTabFromUrl();
   });
+
+  // Automatically close mobile navigation drawer on tab transition
+  useEffect(() => {
+    setIsMobileNavOpen(false);
+  }, [activeTab]);
 
   // History stack for in-app back navigation
   const [historyStack, setHistoryStack] = useState(() => [activeTab]);
