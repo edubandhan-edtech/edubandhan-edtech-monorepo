@@ -30,8 +30,20 @@ export function setupFetchInterceptor() {
     // Determine request URL string
     let url = typeof resource === 'string' ? resource : (resource ? resource.url : '');
     
+    // In Capacitor native mobile environment, route relative /api calls to production cloud backend
+    const isNativeMobile = (typeof window !== 'undefined' && window.Capacitor?.isNativePlatform?.()) || 
+                           window.location.protocol === 'capacitor:';
+    if (isNativeMobile && url.startsWith('/api/')) {
+      url = 'https://edubandhan.in' + url;
+      if (typeof resource === 'string') {
+        resource = url;
+      }
+    }
+
     // Only intercept local API endpoints
-    const isApiRequest = url.startsWith('/api/') || url.includes('://' + window.location.host + '/api/');
+    const isApiRequest = url.startsWith('/api/') || 
+                         url.includes('edubandhan.in/api/') || 
+                         url.includes('://' + window.location.host + '/api/');
     if (!isApiRequest) {
       return originalFetch.apply(this, arguments);
     }
