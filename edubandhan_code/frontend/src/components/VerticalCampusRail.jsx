@@ -8,7 +8,8 @@ import {
   Trophy, 
   GraduationCap, 
   Activity,
-  Sparkles
+  Sparkles,
+  X
 } from 'lucide-react';
 import {
   GeometryCompassIcon,
@@ -175,6 +176,7 @@ export default function VerticalCampusRail({
   theme = 'light'
 }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [activeBoardMsgIdx, setActiveBoardMsgIdx] = useState(0);
   const [clickedItemFeedback, setClickedItemFeedback] = useState(null);
   const [paradeSpeed, setParadeSpeed] = useState('normal'); // 'normal' | 'fast' | 'paused'
@@ -301,108 +303,129 @@ export default function VerticalCampusRail({
   };
 
   // =========================================================================
-  // 1. COLLAPSED VIEW: DOCKED COMPACT STRIP ON RIGHT EDGE
+  // 1. COLLAPSED & EXPANDED VIEWS WITH MOBILE VITALITY LAUNCHER
   // =========================================================================
-  if (isCollapsed) {
-    return (
-      <aside 
-        className="vertical-campus-rail-collapsed"
-        style={{
-          position: 'sticky',
-          top: '70px',
-          height: 'calc(100vh - 70px)',
-          width: '38px',
-          flexShrink: 0,
-          zIndex: 35,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '14px 4px',
-          boxSizing: 'border-box'
-        }}
-      >
+  return (
+    <>
+      {/* Floating Action Button for Mobile Devices (<= 1200px) */}
+      <div className="campus-vitality-mobile-fab-container">
         <button
-          onClick={() => setIsCollapsed(false)}
-          title="Expand Right Campus Activity Rail (🏃🎒🏏⚽🍱🏑🏸🖥️)"
+          onClick={() => {
+            setIsCollapsed(false);
+            setIsMobileDrawerOpen(true);
+          }}
+          className="campus-vitality-mobile-fab"
+          aria-label="Open Campus Vitality Sports & Activities"
+          title="Campus Life in Motion: 13 Activities & Sports"
+        >
+          <span className="fab-runner-icon">🏃</span>
+          <span className="fab-label">Vitality</span>
+          <span className="fab-pulse-dot" />
+        </button>
+      </div>
+
+      {/* Mobile Drawer Backdrop Overlay */}
+      {isMobileDrawerOpen && (
+        <div 
+          className="sidebar-mobile-backdrop"
+          onClick={() => setIsMobileDrawerOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {isCollapsed && !isMobileDrawerOpen ? (
+        <aside 
+          className="vertical-campus-rail-collapsed"
           style={{
-            background: isDark ? 'rgba(56, 189, 248, 0.15)' : 'rgba(21, 94, 239, 0.1)',
-            border: isDark ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid rgba(21, 94, 239, 0.25)',
-            color: isDark ? '#38BDF8' : '#155EEF',
-            padding: '8px 5px',
-            borderRadius: '8px',
-            cursor: 'pointer',
+            position: 'sticky',
+            top: '70px',
+            height: 'calc(100vh - 70px)',
+            width: '38px',
+            flexShrink: 0,
+            zIndex: 35,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: '6px',
-            width: '100%'
+            justifyContent: 'space-between',
+            padding: '14px 4px',
+            boxSizing: 'border-box'
           }}
         >
-          <ChevronLeft size={16} />
-        </button>
-
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '12px'
-        }}>
-          <span 
-            style={{ 
-              fontSize: '18px',
-              animation: 'runnerStrideHop 1s infinite ease-in-out',
-              display: 'inline-block'
+          <button
+            onClick={() => setIsCollapsed(false)}
+            title="Expand Right Campus Activity Rail (🏃🎒🏏⚽🍱🏑🏸🖥️)"
+            style={{
+              background: isDark ? 'rgba(56, 189, 248, 0.15)' : 'rgba(21, 94, 239, 0.1)',
+              border: isDark ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid rgba(21, 94, 239, 0.25)',
+              color: isDark ? '#38BDF8' : '#155EEF',
+              padding: '8px 5px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '6px',
+              width: '100%'
             }}
-            title="Active Student in Motion"
           >
-            🏃
-          </span>
-          <span style={{ 
-            writingMode: 'vertical-rl', 
-            fontSize: '9.5px', 
-            fontWeight: 800, 
-            letterSpacing: '2px',
-            color: isDark ? '#94A3B8' : '#475569',
-            textTransform: 'uppercase'
+            <ChevronLeft size={16} />
+          </button>
+
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '12px'
           }}>
-            CAMPUS VITALITY
-          </span>
-        </div>
+            <span 
+              style={{ 
+                fontSize: '18px',
+                animation: 'runnerStrideHop 1s infinite ease-in-out',
+                display: 'inline-block'
+              }}
+              title="Active Student in Motion"
+            >
+              🏃
+            </span>
+            <span style={{ 
+              writingMode: 'vertical-rl', 
+              fontSize: '9.5px', 
+              fontWeight: 800, 
+              letterSpacing: '2px',
+              color: isDark ? '#94A3B8' : '#475569',
+              textTransform: 'uppercase'
+            }}>
+              CAMPUS VITALITY
+            </span>
+          </div>
 
-        <div 
-          title="Campus Life: Live"
+          <div 
+            title="Campus Life: Live"
+            style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              backgroundColor: '#10B981',
+              boxShadow: '0 0 8px #10B981'
+            }}
+          />
+        </aside>
+      ) : (
+        <aside 
+          className={`vertical-campus-rail ${isMobileDrawerOpen ? 'mobile-rail-open' : ''}`}
           style={{
-            width: '8px',
-            height: '8px',
-            borderRadius: '50%',
-            backgroundColor: '#10B981',
-            boxShadow: '0 0 8px #10B981'
+            position: 'sticky',
+            top: '70px',
+            height: 'calc(100vh - 70px)',
+            width: '220px',
+            flexShrink: 0,
+            zIndex: 35,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            boxSizing: 'border-box'
           }}
-        />
-      </aside>
-    );
-  }
-
-  // =========================================================================
-  // 2. EXPANDED VIEW: SERIAL ONE-BY-ONE CONVEYOR (ZERO OVERLAP)
-  // =========================================================================
-  return (
-    <aside 
-      className="vertical-campus-rail"
-      style={{
-        position: 'sticky',
-        top: '70px',
-        height: 'calc(100vh - 70px)',
-        width: '220px',
-        flexShrink: 0,
-        zIndex: 35,
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-        boxSizing: 'border-box'
-      }}
-    >
+        >
       {/* -------------------------------------------------------------
           HEADER: Brand Bar & Speed Controls
           ------------------------------------------------------------- */}
@@ -444,22 +467,43 @@ export default function VerticalCampusRail({
             }} />
           </div>
 
-          <button
-            onClick={() => setIsCollapsed(true)}
-            className="rail-toggle-btn"
-            title="Collapse rail to right side"
-            style={{
-              cursor: 'pointer',
-              borderRadius: '5px',
-              padding: '3px 5px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'background-color 0.15s ease'
-            }}
-          >
-            <ChevronRight size={13} />
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <button
+              onClick={() => setIsCollapsed(true)}
+              className="rail-toggle-btn"
+              title="Collapse rail to right side"
+              style={{
+                cursor: 'pointer',
+                borderRadius: '5px',
+                padding: '3px 5px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'background-color 0.15s ease'
+              }}
+            >
+              <ChevronRight size={13} />
+            </button>
+
+            <button
+              onClick={() => setIsMobileDrawerOpen(false)}
+              className="rail-mobile-close-btn"
+              title="Close Campus Vitality Drawer"
+              style={{
+                cursor: 'pointer',
+                borderRadius: '6px',
+                padding: '4px 6px',
+                display: 'none',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: 'none',
+                background: 'rgba(239, 68, 68, 0.12)',
+                color: '#EF4444'
+              }}
+            >
+              <X size={15} />
+            </button>
+          </div>
         </div>
 
         {/* Bottom Row: Subtitle & Pace Selector */}
@@ -690,5 +734,7 @@ export default function VerticalCampusRail({
         </div>
       </div>
     </aside>
-  );
+  )}
+</>
+);
 }

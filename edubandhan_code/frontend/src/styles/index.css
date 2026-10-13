@@ -1163,12 +1163,103 @@ input::placeholder, textarea::placeholder {
   to { opacity: 1; }
 }
 
-/* Hide Right Campus Rail on Small Screens to Prevent Horizontal Overflow */
+/* Mobile Floating Campus Vitality FAB and Slide-out Drawer */
+.campus-vitality-mobile-fab-container {
+  display: none;
+}
+.rail-mobile-close-btn {
+  display: none;
+}
+
 @media (max-width: 1200px) {
-  .vertical-campus-rail,
+  .vertical-campus-rail:not(.mobile-rail-open),
   .vertical-campus-rail-collapsed {
     display: none !important;
   }
+
+  .campus-vitality-mobile-fab-container {
+    display: block !important;
+    position: fixed;
+    right: 16px;
+    bottom: 22px;
+    z-index: 990;
+    animation: bounceInFab 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .campus-vitality-mobile-fab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #0284c7 0%, #155eef 100%);
+    color: #ffffff;
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    border-radius: 999px;
+    padding: 9px 15px;
+    box-shadow: 0 8px 24px rgba(21, 94, 239, 0.4), 0 0 16px rgba(56, 189, 248, 0.35);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 800;
+    font-family: var(--font-sans);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  }
+
+  .campus-vitality-mobile-fab:active {
+    transform: scale(0.95);
+  }
+
+  .fab-runner-icon {
+    font-size: 18px;
+    animation: runnerStrideHop 0.6s infinite ease-in-out;
+    display: inline-block;
+  }
+
+  .fab-label {
+    letter-spacing: 0.3px;
+  }
+
+  .fab-pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #10b981;
+    box-shadow: 0 0 8px #10b981;
+  }
+
+  .rail-mobile-close-btn {
+    display: flex !important;
+  }
+
+  .rail-toggle-btn {
+    display: none !important;
+  }
+
+  /* When Mobile Vitality Drawer is Open */
+  .vertical-campus-rail.mobile-rail-open {
+    display: flex !important;
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    width: 270px !important;
+    max-width: 85vw !important;
+    z-index: 1000 !important;
+    box-shadow: -12px 0 40px rgba(0, 0, 0, 0.6) !important;
+    animation: slideInFromRight 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@keyframes slideInFromRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes bounceInFab {
+  0% { transform: scale(0.5) translateY(20px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
 }
 
 /* Main Content Viewport Responsive Padding */

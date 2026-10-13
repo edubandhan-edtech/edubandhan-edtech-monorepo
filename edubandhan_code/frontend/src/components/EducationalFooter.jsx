@@ -33,6 +33,24 @@ export default function EducationalFooter({
   const [clickedItemFeedback, setClickedItemFeedback] = useState(null);
   const [paradeSpeed, setParadeSpeed] = useState('normal'); // 'normal' | 'fast' | 'paused'
 
+  // Proactively detect mobile/tablet screens to automatically enable live animated runway
+  const [isMobileScreen, setIsMobileScreen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth <= 1024;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileScreen(window.innerWidth <= 1024);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const showBottomRunway = animationLayout === 'bottom' || isMobileScreen;
+
   const smartboardLessons = [
     { title: "📐 Mathematics", text: "Pythagoras Theorem: a² + b² = c² • Ex 4.2 Quadratic Equations", icon: "📐" },
     { title: "🌿 Botany & Science", text: "Photosynthesis: 6CO₂ + 6H₂O + Sunlight ➔ C₆H₁₂O₆ + 6O₂", icon: "🌱" },
@@ -83,7 +101,7 @@ export default function EducationalFooter({
       overflow: 'hidden'
     }}>
       {/* 1. TRAVELING CAMPUS SPORTS & ACADEMIC PARADE TRACK (HORIZONTAL OR CONDITIONAL) */}
-      {animationLayout === 'left' ? (
+      {!showBottomRunway ? (
         <div style={{
           maxWidth: '1440px',
           margin: '0 auto',
