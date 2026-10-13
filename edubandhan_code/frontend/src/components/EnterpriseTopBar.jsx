@@ -318,6 +318,7 @@ export default function EnterpriseTopBar({
         {/* Theme Toggle Button (Light / Dark) */}
         <button
           onClick={onToggleTheme}
+          className="topbar-theme-btn"
           title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
           style={{
             width: '38px',
@@ -342,6 +343,7 @@ export default function EnterpriseTopBar({
         <div style={{ position: 'relative' }}>
           <button
             onClick={() => setShowNotifications(!showNotifications)}
+            className="topbar-notifications-btn"
             style={{
               position: 'relative',
               width: '38px',
@@ -444,6 +446,7 @@ export default function EnterpriseTopBar({
             {onLogout && (
               <button
                 onClick={onLogout}
+                className="topbar-logout-btn"
                 title="Sign out of account"
                 style={{
                   height: '38px',
