@@ -175,7 +175,9 @@ export default function VerticalCampusRail({
   currentUser,
   theme = 'light'
 }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(() => 
+    typeof window !== 'undefined' ? window.innerWidth < 1280 : false
+  );
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [activeBoardMsgIdx, setActiveBoardMsgIdx] = useState(0);
   const [clickedItemFeedback, setClickedItemFeedback] = useState(null);
