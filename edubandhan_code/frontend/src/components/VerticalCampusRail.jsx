@@ -238,6 +238,18 @@ export default function VerticalCampusRail({
     return '46s'; // Relaxed, elegant serial pace
   };
 
+  const [isMobileScreen, setIsMobileScreen] = useState(() => 
+    typeof window !== 'undefined' ? window.innerWidth <= 1200 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileScreen(window.innerWidth <= 1200);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const getConveyorPlayState = () => {
     return paradeSpeed === 'paused' ? 'paused' : 'running';
   };
@@ -263,38 +275,47 @@ export default function VerticalCampusRail({
           backgroundColor: isDark ? '#0D223E' : '#FFFFFF'
         }}
       >
-        <div style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: '8px',
-          backgroundColor: item.bgColor,
-          border: `1px solid ${item.borderColor}`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0
-        }}>
+        <div 
+          className="capsule-icon-wrap"
+          style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '8px',
+            backgroundColor: item.bgColor,
+            border: `1px solid ${item.borderColor}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}
+        >
           {renderIcon(item)}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ 
-            fontSize: '11px', 
-            fontWeight: 700, 
-            color: isDark ? '#F8FAFC' : '#12213A', 
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
-          }}>
+          <div 
+            className="capsule-name"
+            style={{ 
+              fontSize: '11px', 
+              fontWeight: 700, 
+              color: isDark ? '#F8FAFC' : '#12213A', 
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}
+          >
             {item.title}
           </div>
-          <div style={{ 
-            fontSize: '9px', 
-            color: isDark ? '#94A3B8' : '#64748B', 
-            fontWeight: 600, 
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
-          }}>
+          <div 
+            className="capsule-sub"
+            style={{ 
+              fontSize: '9px', 
+              color: isDark ? '#94A3B8' : '#64748B', 
+              fontWeight: 600, 
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}
+          >
             {item.subtitle}
           </div>
         </div>
@@ -303,37 +324,11 @@ export default function VerticalCampusRail({
   };
 
   // =========================================================================
-  // 1. COLLAPSED & EXPANDED VIEWS WITH MOBILE VITALITY LAUNCHER
+  // 1. COLLAPSED (DESKTOP ONLY) & EXPANDED CAMPUS VITALITY VIEWS
   // =========================================================================
   return (
     <>
-      {/* Floating Action Button for Mobile Devices (<= 1200px) */}
-      <div className="campus-vitality-mobile-fab-container">
-        <button
-          onClick={() => {
-            setIsCollapsed(false);
-            setIsMobileDrawerOpen(true);
-          }}
-          className="campus-vitality-mobile-fab"
-          aria-label="Open Campus Vitality Sports & Activities"
-          title="Campus Life in Motion: 13 Activities & Sports"
-        >
-          <span className="fab-runner-icon">🏃</span>
-          <span className="fab-label">Vitality</span>
-          <span className="fab-pulse-dot" />
-        </button>
-      </div>
-
-      {/* Mobile Drawer Backdrop Overlay */}
-      {isMobileDrawerOpen && (
-        <div 
-          className="sidebar-mobile-backdrop"
-          onClick={() => setIsMobileDrawerOpen(false)}
-          aria-hidden="true"
-        />
-      )}
-
-      {isCollapsed && !isMobileDrawerOpen ? (
+      {isCollapsed && !isMobileScreen ? (
         <aside 
           className="vertical-campus-rail-collapsed"
           style={{
@@ -412,7 +407,7 @@ export default function VerticalCampusRail({
         </aside>
       ) : (
         <aside 
-          className={`vertical-campus-rail ${isMobileDrawerOpen ? 'mobile-rail-open' : ''}`}
+          className="vertical-campus-rail"
           style={{
             position: 'sticky',
             top: '70px',
@@ -443,7 +438,7 @@ export default function VerticalCampusRail({
         }}
       >
         {/* Top Row: Brand & Minimize Button */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="rail-header-top" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Activity size={14} color={isDark ? '#38BDF8' : '#155EEF'} />
             <span 
@@ -484,31 +479,12 @@ export default function VerticalCampusRail({
             >
               <ChevronRight size={13} />
             </button>
-
-            <button
-              onClick={() => setIsMobileDrawerOpen(false)}
-              className="rail-mobile-close-btn"
-              title="Close Campus Vitality Drawer"
-              style={{
-                cursor: 'pointer',
-                borderRadius: '6px',
-                padding: '4px 6px',
-                display: 'none',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: 'none',
-                background: 'rgba(239, 68, 68, 0.12)',
-                color: '#EF4444'
-              }}
-            >
-              <X size={15} />
-            </button>
           </div>
         </div>
 
         {/* Bottom Row: Subtitle & Pace Selector */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '4px' }}>
-          <span style={{ fontSize: '9.5px', color: isDark ? '#38BDF8' : '#155EEF', fontWeight: 700 }}>
+        <div className="rail-header-bottom" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '4px' }}>
+          <span className="rail-subtitle" style={{ fontSize: '9.5px', color: isDark ? '#38BDF8' : '#155EEF', fontWeight: 700 }}>
             Life in Motion
           </span>
 
@@ -582,25 +558,28 @@ export default function VerticalCampusRail({
           INTERACTIVE CHEER POPUP TOAST (Pops out to the left)
           ------------------------------------------------------------- */}
       {clickedItemFeedback && (
-        <div style={{
-          position: 'fixed',
-          top: '84px',
-          right: '232px',
-          width: '240px',
-          backgroundColor: isDark ? 'rgba(7, 21, 39, 0.98)' : 'rgba(255, 255, 255, 0.98)',
-          border: '1px solid #155EEF',
-          borderRadius: '12px',
-          padding: '12px 14px',
-          boxShadow: isDark 
-            ? '0 12px 36px rgba(0, 0, 0, 0.6), 0 0 16px rgba(56, 189, 248, 0.25)' 
-            : '0 12px 36px rgba(0, 0, 0, 0.15), 0 0 16px rgba(21, 94, 239, 0.15)',
-          zIndex: 9999,
-          color: isDark ? '#F8FAFC' : '#12213A',
-          fontSize: '11.5px',
-          fontWeight: 700,
-          animation: 'fadeIn 0.2s ease-in-out',
-          backdropFilter: 'blur(12px)'
-        }}>
+        <div 
+          className="rail-cheer-toast"
+          style={{
+            position: 'fixed',
+            top: '84px',
+            right: '232px',
+            width: '240px',
+            backgroundColor: isDark ? 'rgba(7, 21, 39, 0.98)' : 'rgba(255, 255, 255, 0.98)',
+            border: '1px solid #155EEF',
+            borderRadius: '12px',
+            padding: '12px 14px',
+            boxShadow: isDark 
+              ? '0 12px 36px rgba(0, 0, 0, 0.6), 0 0 16px rgba(56, 189, 248, 0.25)' 
+              : '0 12px 36px rgba(0, 0, 0, 0.15), 0 0 16px rgba(21, 94, 239, 0.15)',
+            zIndex: 9999,
+            color: isDark ? '#F8FAFC' : '#12213A',
+            fontSize: '11.5px',
+            fontWeight: 700,
+            animation: 'fadeIn 0.2s ease-in-out',
+            backdropFilter: 'blur(12px)'
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#155EEF', marginBottom: '4px' }}>
             <span style={{ fontSize: '18px' }}>{clickedItemFeedback.displayIcon}</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -625,21 +604,24 @@ export default function VerticalCampusRail({
         }}
       >
         {/* Subtle Central Guideline Track */}
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          left: '26px',
-          width: '2px',
-          backgroundImage: isDark
-            ? 'repeating-linear-gradient(180deg, rgba(56, 189, 248, 0.35) 0, rgba(56, 189, 248, 0.35) 12px, transparent 12px, transparent 24px)'
-            : 'repeating-linear-gradient(180deg, rgba(21, 94, 239, 0.25) 0, rgba(21, 94, 239, 0.25) 12px, transparent 12px, transparent 24px)',
-          animation: 'verticalTrackDashesMove 1.2s linear infinite',
-          animationPlayState: getConveyorPlayState(),
-          opacity: 0.5,
-          zIndex: 1,
-          pointerEvents: 'none'
-        }} />
+        <div 
+          className="rail-guideline-track"
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: '26px',
+            width: '2px',
+            backgroundImage: isDark
+              ? 'repeating-linear-gradient(180deg, rgba(56, 189, 248, 0.35) 0, rgba(56, 189, 248, 0.35) 12px, transparent 12px, transparent 24px)'
+              : 'repeating-linear-gradient(180deg, rgba(21, 94, 239, 0.25) 0, rgba(21, 94, 239, 0.25) 12px, transparent 12px, transparent 24px)',
+            animation: 'verticalTrackDashesMove 1.2s linear infinite',
+            animationPlayState: getConveyorPlayState(),
+            opacity: 0.5,
+            zIndex: 1,
+            pointerEvents: 'none'
+          }} 
+        />
 
         {/* Conveyor Track: Moves smoothly upwards without ANY overlap */}
         <div 

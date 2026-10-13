@@ -1167,99 +1167,148 @@ input::placeholder, textarea::placeholder {
 .campus-vitality-mobile-fab-container {
   display: none;
 }
-.rail-mobile-close-btn {
-  display: none;
-}
-
+/* ==========================================================================
+   MOBILE & RESPONSIVE CAMPUS VITALITY (Continuous Ribbon on Screens <= 1200px)
+   ========================================================================== */
 @media (max-width: 1200px) {
-  .vertical-campus-rail:not(.mobile-rail-open),
+  .app-content-row {
+    flex-direction: column !important;
+  }
+
+  /* Always visible directly on screen - zero clicks required */
+  .vertical-campus-rail {
+    display: flex !important;
+    order: -1 !important;
+    position: relative !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    height: auto !important;
+    flex-direction: column !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    background-color: var(--bg-surface) !important;
+    z-index: 25 !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+  }
+
   .vertical-campus-rail-collapsed {
     display: none !important;
   }
 
   .campus-vitality-mobile-fab-container {
-    display: block !important;
-    position: fixed;
-    right: 16px;
-    bottom: 22px;
-    z-index: 990;
-    animation: bounceInFab 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .campus-vitality-mobile-fab {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: linear-gradient(135deg, #0284c7 0%, #155eef 100%);
-    color: #ffffff;
-    border: 1.5px solid rgba(255, 255, 255, 0.4);
-    border-radius: 999px;
-    padding: 9px 15px;
-    box-shadow: 0 8px 24px rgba(21, 94, 239, 0.4), 0 0 16px rgba(56, 189, 248, 0.35);
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 800;
-    font-family: var(--font-sans);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
-  }
-
-  .campus-vitality-mobile-fab:active {
-    transform: scale(0.95);
-  }
-
-  .fab-runner-icon {
-    font-size: 18px;
-    animation: runnerStrideHop 0.6s infinite ease-in-out;
-    display: inline-block;
-  }
-
-  .fab-label {
-    letter-spacing: 0.3px;
-  }
-
-  .fab-pulse-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background-color: #10b981;
-    box-shadow: 0 0 8px #10b981;
-  }
-
-  .rail-mobile-close-btn {
-    display: flex !important;
-  }
-
-  .rail-toggle-btn {
     display: none !important;
   }
 
-  /* When Mobile Vitality Drawer is Open */
-  .vertical-campus-rail.mobile-rail-open {
+  /* Compact, unified one-line header */
+  .vertical-campus-rail .rail-header {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 6px 14px !important;
+    gap: 8px !important;
+    border-bottom: none !important;
+    background-color: transparent !important;
+  }
+
+  .vertical-campus-rail .rail-header-top {
     display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .vertical-campus-rail .rail-header-bottom {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  .vertical-campus-rail .rail-toggle-btn,
+  .vertical-campus-rail .rail-guideline-track,
+  .vertical-campus-rail .rail-footer {
+    display: none !important;
+  }
+
+  /* Horizontal Ticker Viewport */
+  .vertical-conveyor-viewport {
+    height: 48px !important;
+    flex: none !important;
+    overflow: hidden !important;
+    mask-image: linear-gradient(to right, transparent 0%, black 16px, black calc(100% - 16px), transparent 100%) !important;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 16px, black calc(100% - 16px), transparent 100%) !important;
+  }
+
+  /* Continuous horizontal motion track */
+  .vertical-conveyor-track {
+    display: flex !important;
+    flex-direction: row !important;
+    animation: horizontalSerialConveyor 26s linear infinite !important;
+    padding-top: 0 !important;
+    align-items: center !important;
+    height: 100% !important;
+    width: max-content !important;
+    will-change: transform;
+  }
+
+  .vertical-conveyor-group {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    padding-bottom: 0 !important;
+    padding-right: 10px !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Compact horizontal capsule cards */
+  .vertical-capsule-card {
+    width: auto !important;
+    min-width: 130px !important;
+    max-width: 170px !important;
+    height: 38px !important;
+    padding: 4px 10px !important;
+    gap: 8px !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+  }
+
+  .vertical-capsule-card .capsule-icon-wrap {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 6px !important;
+  }
+
+  .vertical-capsule-card .capsule-icon-wrap > span,
+  .vertical-capsule-card .capsule-icon-wrap svg {
+    transform: scale(0.85);
+  }
+
+  .vertical-capsule-card .capsule-name {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+  }
+
+  .vertical-capsule-card .capsule-sub {
+    font-size: 8.5px !important;
+  }
+
+  /* Mobile Cheer Toast */
+  .rail-cheer-toast {
     position: fixed !important;
-    top: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    height: 100vh !important;
-    height: 100dvh !important;
-    width: 270px !important;
-    max-width: 85vw !important;
-    z-index: 1000 !important;
-    box-shadow: -12px 0 40px rgba(0, 0, 0, 0.6) !important;
-    animation: slideInFromRight 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    top: 72px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: calc(100vw - 24px) !important;
+    z-index: 9999 !important;
   }
 }
 
-@keyframes slideInFromRight {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
-}
-
-@keyframes bounceInFab {
-  0% { transform: scale(0.5) translateY(20px); opacity: 0; }
-  100% { transform: scale(1) translateY(0); opacity: 1; }
+@keyframes horizontalSerialConveyor {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* Main Content Viewport Responsive Padding */
