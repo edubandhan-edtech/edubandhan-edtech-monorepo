@@ -76,21 +76,35 @@ def check_and_install_dependencies():
             print(f"[!] Warning: Could not auto-install dependencies: {e}")
 
 def check_frontend_build(force_rebuild: bool = False):
-    """Ensure React production build exists in frontend/dist. If missing or forced, build automatically."""
+    """Ensure React build in frontend/dist is up-to-date with frontend/src.
+    If dist is missing OR any file in src/ was modified after dist/index.html was built,
+    automatically runs 'npm run build' so developers NEVER have to run it manually."""
     frontend_dir = CODE_DIR / "frontend"
+    src_dir = frontend_dir / "src"
     dist_dir = frontend_dir / "dist"
     index_file = dist_dir / "index.html"
     
-    if force_rebuild or not index_file.exists():
-        print("[*] Building React production bundle for single-pod deployment...")
+    needs_rebuild = force_rebuild or not index_file.exists()
+    
+    # Check if any source file in src/ or public/ is newer than dist/index.html
+    if not needs_rebuild and index_file.exists() and src_dir.exists():
+        dist_mtime = index_file.stat().st_mtime
+        for path in src_dir.rglob("*"):
+            if path.is_file() and path.stat().st_mtime > dist_mtime:
+                print(f"[*] Detected changes in '{path.name}', auto-compiling React frontend...")
+                needs_rebuild = True
+                break
+
+    if needs_rebuild:
+        print("[*] ⚙️ Building fresh React bundle into frontend/dist...")
         try:
             shell_cmd = "npm run build"
             subprocess.check_call(shell_cmd, shell=True, cwd=str(frontend_dir))
-            print("[+] ✅ React Frontend built successfully into frontend/dist!\n")
+            print("[+] ✅ React Frontend updated successfully into frontend/dist!\n")
         except Exception as e:
-            print(f"[!] Warning: Frontend auto-build failed ({e}). If Node.js is installed, run 'npm run build' inside {frontend_dir}.\n")
+            print(f"[!] Warning: Frontend auto-build failed ({e}). Run 'npm run build' inside {frontend_dir}.\n")
     else:
-        print(f"[+] ✅ React Frontend distribution ready in: {dist_dir}")
+        print(f"[+] ✅ React Frontend distribution is up to date: {dist_dir}")
 
 def ensure_port_available(port: int):
     """Ensure the target port is available or alert user cleanly."""
