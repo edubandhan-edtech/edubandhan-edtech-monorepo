@@ -332,9 +332,8 @@ export default function VerticalCampusRail({
         <aside 
           className="vertical-campus-rail-collapsed"
           style={{
-            position: 'sticky',
-            top: '70px',
-            height: 'calc(100vh - 70px)',
+            position: 'relative',
+            height: '100%',
             width: '38px',
             flexShrink: 0,
             zIndex: 35,
@@ -409,9 +408,8 @@ export default function VerticalCampusRail({
         <aside 
           className="vertical-campus-rail"
           style={{
-            position: 'sticky',
-            top: '70px',
-            height: 'calc(100vh - 70px)',
+            position: 'relative',
+            height: '100%',
             width: '220px',
             flexShrink: 0,
             zIndex: 35,

@@ -1171,8 +1171,24 @@ input::placeholder, textarea::placeholder {
    MOBILE & RESPONSIVE CAMPUS VITALITY (Continuous Ribbon on Screens <= 1200px)
    ========================================================================== */
 @media (max-width: 1200px) {
+  .app-root-layout {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+  }
+  .app-main-column {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow: visible !important;
+  }
   .app-content-row {
     flex-direction: column !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .main-content-viewport {
+    height: auto !important;
+    overflow-y: visible !important;
   }
 
   /* Always visible directly on screen - zero clicks required */

@@ -485,10 +485,10 @@ export default function App() {
       className="app-root-layout"
       style={{
         display: 'flex',
-        minHeight: '100vh',
+        height: '100vh',
         width: '100%',
         maxWidth: '100vw',
-        overflowX: 'hidden',
+        overflow: 'hidden',
         backgroundColor: theme === 'dark' ? '#071527' : '#F7F9FC', // Dynamic Dark / Light Background
         color: theme === 'dark' ? '#F8FAFC' : '#12213A',
         fontFamily: 'var(--font-sans)',
@@ -528,8 +528,8 @@ export default function App() {
           minWidth: 0,
           width: '100%',
           maxWidth: '100%',
-          minHeight: '100vh',
-          overflowX: 'hidden'
+          height: '100vh',
+          overflow: 'hidden'
         }}
       >
         {/* Enterprise Top Bar */}
@@ -612,10 +612,12 @@ export default function App() {
             display: 'flex',
             flex: 1,
             minHeight: 0,
+            height: 'calc(100vh - 68px)',
             width: '100%',
             maxWidth: '100%',
             minWidth: 0,
-            position: 'relative'
+            position: 'relative',
+            overflow: 'hidden'
           }}
         >
           {/* Main Content Viewport */}
