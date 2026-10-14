@@ -163,8 +163,20 @@ CLIENT_TABS = {
     "leaves", "quiz", "aichat", "attendance_view", "overview", "parent"
 }
 
-@app.get("/{tab_name}", response_class=HTMLResponse)
+@app.get("/{tab_name}")
 def direct_tab_route(tab_name: str):
+    # Check if a static root file exists in frontend/dist (robots.txt, sitemap.xml, google verification files)
+    static_file = os.path.join(FRONTEND_DIST, tab_name)
+    if os.path.isfile(static_file):
+        media_type = "text/html"
+        if tab_name.endswith(".txt"):
+            media_type = "text/plain"
+        elif tab_name.endswith(".xml"):
+            media_type = "application/xml"
+        elif tab_name.endswith(".svg"):
+            media_type = "image/svg+xml"
+        return FileResponse(static_file, media_type=media_type)
+
     if tab_name in CLIENT_TABS:
         react_index = os.path.join(FRONTEND_DIST, "index.html")
         if os.path.exists(react_index):
