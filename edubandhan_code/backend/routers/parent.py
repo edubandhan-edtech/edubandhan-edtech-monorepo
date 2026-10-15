@@ -292,7 +292,7 @@ def parent_ai_chatbot(req: AIChatRequest):
 
     # Determine Groq API Key: client provided > settings > env var
     groq_key = (req.api_key or settings.GROQ_API_KEY or os.getenv("GROQ_API_KEY") or "").strip()
-    model_name = (req.model or settings.GROQ_MODEL or os.getenv("GROQ_MODEL") or "qwen/qwen3.8-27b").strip()
+    model_name = (req.model or settings.GROQ_MODEL or os.getenv("GROQ_MODEL") or "llama-3.3-70b-versatile").strip()
 
     is_parent_mode = (req.mode.lower() == "parent")
 
@@ -392,8 +392,10 @@ def generate_pedagogical_fallback(query: str, mode: str) -> str:
     q = query.lower()
     is_parent = (mode.lower() == "parent")
 
-    # Match common school curriculum themes
-    if any(k in q for k in ["fraction", "half", "quarter", "numerator", "denominator"]):
+    # Match common school curriculum themes with normalized typo tolerance
+    q_norm = "".join(ch for ch in q if ch.isalnum())
+
+    if any(k in q for k in ["fraction", "half", "quarter", "numerator", "denominator", "ratio", "decimal"]):
         if is_parent:
             return (
                 "### 🧠 Core Concept: Fractions Made Simple\n"
@@ -423,7 +425,9 @@ def generate_pedagogical_fallback(query: str, mode: str) -> str:
                 "🌟 You're doing amazing! Ask me anything else you'd like to understand!"
             )
 
-    if any(k in q for k in ["photosynthesis", "plant", "leaf", "sunlight", "chlorophyll"]):
+    # Photosynthesis check with typo tolerance (e.g. 'photo sysnthesis', 'photosythesis')
+    if (("photo" in q_norm and ("synth" in q_norm or "sysnth" in q_norm or "syth" in q_norm)) or
+        any(k in q for k in ["photosynthesis", "plant", "leaf", "leaves", "sunlight", "chlorophyll", "stomata"])):
         if is_parent:
             return (
                 "### 🧠 Core Concept: Photosynthesis (Nature's Kitchen)\n"

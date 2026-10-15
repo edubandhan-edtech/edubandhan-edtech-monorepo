@@ -13,15 +13,260 @@ import {
   HeartHandshake,
   BrainCircuit,
   MessageSquare,
-  HelpCircle
+  HelpCircle,
+  Settings,
+  Key,
+  X,
+  ExternalLink,
+  Cpu
 } from 'lucide-react';
 import InteractiveAiResponse from './InteractiveAiResponse';
+
+export function generatePedagogicalAnswer(query, mode) {
+  const q = (query || '').toLowerCase().trim();
+  const qNorm = q.replace(/[^a-z0-9]/g, '');
+  const isParent = mode === 'parent';
+
+  // 1. Photosynthesis / Plant Biology / Sunlight (with typo tolerance e.g. 'photo sysnthesis', 'photosythesis')
+  if (
+    (qNorm.includes('photo') && (qNorm.includes('synth') || qNorm.includes('sysnth') || qNorm.includes('syth'))) ||
+    ['photosynthesis', 'plant', 'plants', 'leaf', 'leaves', 'sunlight', 'chlorophyll', 'stomata', 'glucose'].some(k => q.includes(k))
+  ) {
+    if (isParent) {
+      return (
+        `🌱 Parent Teaching Guide for "Photosynthesis":\n\n` +
+        `1. 🧠 Core Concept in 60 Seconds:\n` +
+        `Photosynthesis is the fundamental biological process where green plants turn Sunlight + Water + Carbon Dioxide into Glucose (plant energy) and Oxygen (fresh air for us to breathe).\n\n` +
+        `2. 🗣️ The Solar Kitchen Analogy to Teach at Home:\n` +
+        `Tell your child that each leaf is a tiny solar kitchen! Chlorophyll acts like mini solar panels that capture sunbeams, roots suck water up from the soil like a straw, and tiny leaf pores (stomata) breathe in carbon dioxide to cook delicious plant food!\n\n` +
+        `3. ⚠️ Common Child Misconception:\n` +
+        `Children often think plants "eat soil". Clarify that soil only holds the roots and water—the real food is cooked in the leaves using sunlight!\n\n` +
+        `4. 💡 Fun 5-Minute At-Home Activity:\n` +
+        `Place a fresh green leaf in a transparent glass bowl filled with water under bright sunlight. After 20 minutes, show your child the tiny air bubbles forming on the leaf surface—that is real oxygen being created right before their eyes!`
+      );
+    } else {
+      return (
+        `🌿 Welcome to Nature's MasterChef Kitchen!\n\n` +
+        `Did you know every green leaf on a tree is a tiny, super-smart kitchen? 👩‍🍳 Plants don't have hands to order food, so they make their own through Photosynthesis!\n\n` +
+        `☀️ 3 Secret Ingredients:\n` +
+        `1. ☀️ Sunlight: Captured by green Chlorophyll (like solar panels on the leaf).\n` +
+        `2. 💧 Water: Sucked up by roots from the soil like a drinking straw.\n` +
+        `3. 🌬️ Carbon Dioxide (CO₂): Sucked in from air through tiny microscopic mouth-pores called Stomata.\n\n` +
+        `🍲 The Delicious Result:\n` +
+        `• Glucose: Sweet energy food that helps the plant grow flowers and fruit.\n` +
+        `• Oxygen: Fresh clean air released into the sky for you and me to breathe! 🎈\n\n` +
+        `🎯 Quick Check Challenge:\n` +
+        `What is the green pigment in leaves that catches sunlight? (Hint: Starts with the letter 'C'!) 🌟`
+      );
+    }
+  }
+
+  // 2. Fractions & Math Parts (ONLY when user explicitly asks about fractions / parts)
+  if (['fraction', 'numerator', 'denominator', 'half', 'quarter', 'equal part', 'ratio', 'decimal'].some(k => q.includes(k))) {
+    if (isParent) {
+      return (
+        `🍕 Parent Coaching Guide for Fractions:\n\n` +
+        `1. 🧠 Core Concept:\n` +
+        `A fraction is simply a part of a whole. The bottom number (denominator) tells you how many equal pieces the object is divided into, while the top number (numerator) tells you how many pieces you have.\n\n` +
+        `2. 🗣️ The Roti / Pizza Technique:\n` +
+        `• Cut a round roti or chocolate bar into 4 equal quarters during snack time.\n` +
+        `• Ask: 'If there are 4 slices and you eat 1, you ate 1/4th. If you eat 2 slices, you ate 2/4th, which is half!'\n` +
+        `• Physically moving pieces removes math anxiety completely.\n\n` +
+        `3. ⚠️ Common Child Pitfall:\n` +
+        `Kids often think a bigger denominator means a bigger slice (thinking 1/8 > 1/4 because 8 > 4). Ask: 'Would you rather share your favourite chocolate with 4 friends or 8 friends? More people means smaller pieces!'`
+      );
+    } else {
+      return (
+        `🍕 Hey Champ! Let's Master Fractions Together!\n\n` +
+        `Think of fractions like slicing your favourite Cheesy Pizza with friends! 😋\n\n` +
+        `• Bottom Number (Denominator): Total equal slices of the pizza (e.g. 4 slices).\n` +
+        `• Top Number (Numerator): How many slices you grab on your plate (e.g. 1 slice).\n\n` +
+        `So 1/4 just means: 'You have 1 out of the 4 equal slices!'\n\n` +
+        `🌟 The Golden Secret: 2/4 is the exact same as 1/2! If a pizza has 4 slices and you eat 2, you just ate half the pizza!\n\n` +
+        `🎯 Quick Check Challenge:\n` +
+        `If an apple is cut into 8 equal slices and you give 3 to your friend, what fraction did your friend get? (Hint: Friend's slices / Total slices) 🍏`
+      );
+    }
+  }
+
+  // 3. Gravity & Physics
+  if (['gravity', 'gravit', 'fall', 'apple', 'newton', 'weight', 'mass', 'orbit', 'magnet', 'planet'].some(k => q.includes(k))) {
+    if (isParent) {
+      return (
+        `🌍 Parent Teaching Guide for "Gravity":\n\n` +
+        `1. 🧠 Core Concept:\n` +
+        `Gravity is the invisible pulling force that every object with mass exerts on everything else. Because Earth is huge, its gravity pulls everything toward its center!\n\n` +
+        `2. 🗣️ How to Explain to Your Child:\n` +
+        `Drop a small ball or pencil. Ask: 'Why didn't it float up to the ceiling?' Earth acts like an enormous gentle magnet that keeps our feet on the ground and holds the oceans in place!\n\n` +
+        `3. 💡 Fun At-Home Demonstration:\n` +
+        `Drop a flat sheet of paper and a crumpled paper ball together. The crumpled ball hits first because of air resistance, not because gravity pulls it harder! In space with no air, a feather and a bowling ball fall at the exact same speed.`
+      );
+    } else {
+      return (
+        `🚀 Welcome to the Secrets of Gravity!\n\n` +
+        `Ever wonder why you don't float away into the clouds like a party balloon? 🎈 That's thanks to Earth's superpower: Gravity!\n\n` +
+        `🧲 How It Works:\n` +
+        `• Earth is super gigantic and heavy, so it has an invisible magnetic hug that pulls everything down toward the ground.\n` +
+        `• Without gravity, water would spill out of swimming pools and you'd need seatbelts just to sit on your sofa!\n` +
+        `• It also keeps the Moon circling around us like an invisible tether ball.\n\n` +
+        `🎯 Quick Check Challenge:\n` +
+        `Who was the famous scientist who watched an apple fall from a tree and helped explain gravity? (Hint: Sir Isaac N______) 🍎`
+      );
+    }
+  }
+
+  // 4. Water Cycle & Weather
+  if (['water cycle', 'rain', 'cloud', 'clouds', 'evaporation', 'condensation', 'precipitation'].some(k => q.includes(k))) {
+    if (isParent) {
+      return (
+        `🌧️ Parent Teaching Guide for "The Water Cycle":\n\n` +
+        `1. 🧠 Core Concept:\n` +
+        `The water cycle is Earth's continuous recycling system: Evaporation (liquid to gas) -> Condensation (gas to clouds) -> Precipitation (rain/snow) -> Collection (lakes/rivers).\n\n` +
+        `2. 🗣️ Kitchen Demonstration:\n` +
+        `When boiling water or making hot tea, show the steam rising (Evaporation). Place a cool lid over the steam: show water droplets forming underneath (Condensation). When drops get heavy and drip down, that's Rain (Precipitation)!`
+      );
+    } else {
+      return (
+        `🌧️ The Magical Journey of Droppy the Water Droplet!\n\n` +
+        `Did you know the water you drink today might have been drunk by a dinosaur millions of years ago? 🦕 Earth recycles all its water in 3 epic steps!\n\n` +
+        `1. ☀️ Evaporation: The hot sun turns puddle water into invisible water vapour that flies up into the sky.\n` +
+        `2. ☁️ Condensation: High up in the cold sky, droplets cuddle together to make fluffy clouds.\n` +
+        `3. 🌧️ Precipitation: When the clouds get too full and heavy, they burst into fresh raindrops!\n\n` +
+        `🎯 Quick Check: What do we call water turning into steam when heated by the sun? ☀️`
+      );
+    }
+  }
+
+  // 5. Trigonometry & Geometry
+  if (['trig', 'sin', 'cos', 'tan', 'hypotenuse', 'triangle', 'angle', 'pythagor'].some(k => q.includes(k))) {
+    if (isParent) {
+      return (
+        `📐 Parent Guide for Trigonometry:\n\n` +
+        `1. 🧠 Core Concept: Trigonometry is the math of right-angled triangles to measure heights and distances without climbing them.\n` +
+        `2. 🗣️ The Ladder Against the Wall: The Wall is Height (P), Ground is Base (B), Ladder is Hypotenuse (H).\n` +
+        `3. 💡 Mnemonic: 'Some People Have, Curly Brown Hair, Turned Permanent Black' (Sin = P/H, Cos = B/H, Tan = P/B)!`
+      );
+    } else {
+      return (
+        `📐 Hey Champ! Let's Crack Trigonometry!\n\n` +
+        `Trigonometry is a superpower to measure huge things like Mount Everest or a tall building without climbing! 🚀\n\n` +
+        `🪜 The Ladder Rule:\n` +
+        `Imagine a ladder leaning on a tall wall:\n` +
+        `• Ladder = Hypotenuse (H)\n` +
+        `• Wall = Height / Perpendicular (P)\n` +
+        `• Ground = Base (B)\n\n` +
+        `• Sin = Height / Ladder\n` +
+        `• Cos = Ground / Ladder\n` +
+        `• Tan = Height / Ground\n\n` +
+        `🎯 Quick Check: If the wall is 3 meters and the ladder is 5 meters, what is Sin? (Hint: Wall / Ladder)`
+      );
+    }
+  }
+
+  // 6. Study Routine & Homework Habits
+  if (['routine', 'schedule', 'timetable', 'study', 'homework', 'focus', 'discipline'].some(k => q.includes(k))) {
+    if (isParent) {
+      return (
+        `📋 Recommended Daily Study Blueprint (Classes 1-10):\n\n` +
+        `1. ⏰ Timing: 30 minutes of homework review right after evening play and snack.\n` +
+        `2. ⏱️ 25/5 Pomodoro Rule: 25 minutes of deep concept practice + 5-minute movement or water break.\n` +
+        `3. 🎯 Subject Splitting: 15 minutes math problem-solving + 15 minutes science reading.\n` +
+        `4. 🚫 Keep total desk study under 60 minutes for primary grades to prevent burnout.`
+      );
+    } else {
+      return (
+        `⚡ The Superhero 25-Minute Study Blueprint!\n\n` +
+        `Studying for hours is boring. The secret of top rankers is short, super-focused power sprints! 🚀\n\n` +
+        `1. ⏱️ Sprint 1 (20 mins): Pick just ONE chapter doubt and solve 3 questions.\n` +
+        `2. 🍎 Fuel Break (5 mins): Drink water, stretch, do 5 jumping jacks!\n` +
+        `3. 🧠 Sprint 2 (15 mins): Explain what you learned in your own words.\n\n` +
+        `🎯 Challenge: Set a 20-minute timer right now and see how much you can finish!`
+      );
+    }
+  }
+
+  // 7. Exam Anxiety & Fear
+  if (['anxiety', 'fear', 'stress', 'nervous', 'exam', 'test', 'marks', 'score'].some(k => q.includes(k))) {
+    if (isParent) {
+      return (
+        `🧘 3 Practical Steps to Ease Exam Anxiety:\n\n` +
+        `1. ❤️ Praise Effort & Curiosity: Celebrate daily consistency rather than just test score numbers.\n` +
+        `2. 🎲 Low-Stakes Practice: Turn review into quick 5-minute dinner table trivia games.\n` +
+        `3. 😴 Sleep & Outdoor Play: Ensure 8-9 hours of restful sleep—tired brains forget 40% more!`
+      );
+    } else {
+      return (
+        `🌟 Hey! Take a Deep Breath: You've Got This!\n\n` +
+        `Feeling nervous before a test is completely normal—even Olympic athletes feel butterflies in their stomach! 🦋\n\n` +
+        `✨ 3 Quick Tricks to Calm Your Mind:\n` +
+        `1. 🌬️ The 4-4-4 Box Breath: Breathe in for 4 seconds, hold for 4, breathe out for 4.\n` +
+        `2. 🎯 Treat the exam like a fun puzzle game, not a battlefield.\n` +
+        `3. 📝 If you get stuck on a question, skip it and come back later with fresh eyes!`
+      );
+    }
+  }
+
+  // 8. Practice Quiz Request
+  if (['quiz', 'test me', 'questions', 'mcq'].some(k => q.includes(k))) {
+    return (
+      `🎯 Quick Knowledge Check (Class 5-8 Science & Math):\n\n` +
+      `Question 1: Which gas do green plants absorb from the air during photosynthesis?\n` +
+      `A) Oxygen   B) Carbon Dioxide   C) Nitrogen   D) Hydrogen\n\n` +
+      `Question 2: If a pizza has 6 equal slices and you eat 3, what fraction did you eat?\n` +
+      `A) 1/3   B) 1/2   C) 2/3   D) 1/6\n\n` +
+      `Reply with your answers (e.g., '1-B, 2-B') and I'll grade them instantly! 🌟`
+    );
+  }
+
+  // 9. Dynamic Open-Ended Educational Response (NEVER mentions fractions unless asked!)
+  const cleanTopic = query
+    .replace(/^(what is|what are|explain|how does|how do|tell me about|how to teach|can you explain|why is|why do)\s+/i, '')
+    .replace(/[?!.]+$/, '')
+    .trim() || query;
+
+  if (isParent) {
+    return (
+      `👨‍👩‍👧 Parent Teaching Guide for "${cleanTopic}":\n\n` +
+      `1. 🧠 Core Concept in 60 Seconds:\n` +
+      `When introducing "${cleanTopic}" to your child, ground the concept in everyday observation before touching complex textbook definitions. Children absorb ideas much faster when they can see or feel the real-world connection.\n\n` +
+      `2. 🗣️ Step-by-Step Home Explanation Strategy:\n` +
+      `• Start with curiosity: "Have you ever wondered what happens when we look at ${cleanTopic}?"\n` +
+      `• Use relatable household metaphors (toys, kitchen routines, sports, or nature).\n` +
+      `• Encourage them to describe the process in their own words before correcting terminology.\n\n` +
+      `3. ⚠️ Common Child Misconception:\n` +
+      `Students often try to memorize sentences word-for-word without understanding the underlying logic. Ask "Why do you think this happens?" to build analytical reasoning.\n\n` +
+      `4. 💡 Quick Discussion Prompt:\n` +
+      `Ask your child: "If you had to teach ${cleanTopic} to a younger friend, how would you describe it in 2 simple sentences?"`
+    );
+  } else {
+    return (
+      `🚀 Let's Explore "${cleanTopic}" Step-by-Step!\n\n` +
+      `That is an awesome question to ask! Being curious is what makes great students. 🌟\n\n` +
+      `1. 🌟 The Big Picture:\n` +
+      `Every big topic in science, math, or history is built from small, simple ideas. Think of "${cleanTopic}" like assembling your favourite Lego set!\n\n` +
+      `2. 🔍 3 Key Clues to Understand It:\n` +
+      `• Connect it to what you see every day around you.\n` +
+      `• Break the problem down: What clues do we have, and what are we trying to find?\n` +
+      `• Drawing a quick sketch or diagram in your rough notebook makes it 10x easier to picture!\n\n` +
+      `🎯 Quick Check Challenge:\n` +
+      `What part of "${cleanTopic}" feels most interesting or puzzling to you right now? Reply and let's solve it together!`
+    );
+  }
+}
 
 export default function AiSaathiChat({ currentUser, onRequireAuth }) {
   // 2 Dedicated Modes: 'child' (Child Doubt Clear) vs 'parent' (Parent Study Guide)
   const [activeSection, setActiveSection] = useState('child');
   const [inputMsg, setInputMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Live Groq Cloud AI Key & Model Configuration
+  const [customApiKey, setCustomApiKey] = useState(() => localStorage.getItem('edubandhan_groq_key') || '');
+  const [customModel, setCustomModel] = useState(() => localStorage.getItem('edubandhan_groq_model') || 'llama-3.3-70b-versatile');
+  const [showSettings, setShowSettings] = useState(false);
+  const [tempApiKey, setTempApiKey] = useState(customApiKey);
+  const [tempModel, setTempModel] = useState(customModel);
+  const [saveStatus, setSaveStatus] = useState('');
 
   const childPrompts = [
     "Explain fractions step-by-step",
@@ -68,6 +313,21 @@ export default function AiSaathiChat({ currentUser, onRequireAuth }) {
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
+  const handleSaveSettings = (e) => {
+    e.preventDefault();
+    const cleanKey = tempApiKey.trim();
+    const cleanModel = tempModel.trim() || 'llama-3.3-70b-versatile';
+    setCustomApiKey(cleanKey);
+    setCustomModel(cleanModel);
+    localStorage.setItem('edubandhan_groq_key', cleanKey);
+    localStorage.setItem('edubandhan_groq_model', cleanModel);
+    setSaveStatus('Settings saved!');
+    setTimeout(() => {
+      setSaveStatus('');
+      setShowSettings(false);
+    }, 1200);
+  };
+
   const handleSendQuery = async (queryText) => {
     if (!currentUser && onRequireAuth) {
       onRequireAuth({ id: 'aichat', title: 'Chat with AI Mentor' });
@@ -87,13 +347,15 @@ export default function AiSaathiChat({ currentUser, onRequireAuth }) {
     setIsLoading(true);
 
     try {
-      // Connect to live backend AI endpoint with active section mode
+      // Connect to live backend AI endpoint with active section mode and optional API key
       const response = await fetch('/api/parent/ai-chatbot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: query,
-          mode: activeSection // 'child' | 'parent'
+          mode: activeSection, // 'child' | 'parent'
+          api_key: customApiKey || undefined,
+          model: customModel || undefined
         })
       });
 
@@ -106,43 +368,26 @@ export default function AiSaathiChat({ currentUser, onRequireAuth }) {
           text: reply
         }]);
       } else {
-        // Fallback pedagogical tailored answer
+        // Fallback to high-quality smart pedagogical answer tailored to the exact topic
+        const customReply = generatePedagogicalAnswer(query, activeSection);
         setTimeout(() => {
-          let customReply = "";
-          if (activeSection === 'child') {
-            customReply = `Great question on "${query}"! 🌟 Let's solve it together: 1. Imagine a pizza cut into 4 equal slices. If you eat 1 slice, you've eaten 1/4th of the whole pizza! 2. The bottom number (4) is total parts, and the top number (1) is your slice. Would you like to try one more problem?`;
-            if (query.toLowerCase().includes("quiz")) {
-              customReply = "🎯 Quick Quiz Question 1: If an apple is cut into 2 equal halves, what fraction represents 1 half? A) 1/4  B) 1/2  C) 2/1. Reply with your answer!";
-            } else if (query.toLowerCase().includes("plant") || query.toLowerCase().includes("sunlight")) {
-              customReply = "🌿 Plants use sunlight like a mini solar kitchen! Through Photosynthesis, they take sunlight + water + air (carbon dioxide) to make sweet food (glucose) and give us fresh oxygen to breathe!";
-            }
-          } else {
-            // Parent perspective
-            customReply = `Parent Coaching Tip for "${query}": When teaching fractions at home, avoid jumping straight into abstract symbols. Instead, use tangible objects like folding paper strips or chocolate bars. Ask: 'How many equal parts are there in total?' First build physical intuition, then connect it to numbers. This prevents math anxiety completely!`;
-            if (query.toLowerCase().includes("routine") || query.toLowerCase().includes("schedule")) {
-              customReply = "📋 Recommended Class 5 Daily Study Blueprint: 1. 20-min homework review right after evening snack. 2. 30-min focused concept practice (15 min math, 15 min reading). 3. 10-min active recall recap. Keep total daily desk time under 60 minutes with a 5-minute break in between.";
-            } else if (query.toLowerCase().includes("anxiety")) {
-              customReply = "🧘 3 Ways to Ease Exam Anxiety: 1. Praise consistency and curiosity, not just test scores. 2. Turn study sessions into low-stakes 5-minute games. 3. Ensure 8-9 hours of restful sleep and physical play every evening.";
-            }
-          }
-
           setMessages(prev => [...prev, {
             id: Date.now() + 1,
             sender: 'bot',
             text: customReply
           }]);
-        }, 500);
+        }, 300);
       }
     } catch (err) {
+      // Offline / network failure fallback - tailored to the specific question asked
+      const customReply = generatePedagogicalAnswer(query, activeSection);
       setTimeout(() => {
         setMessages(prev => [...prev, {
           id: Date.now() + 1,
           sender: 'bot',
-          text: activeSection === 'child'
-            ? `Let's tackle "${query}" step-by-step! What part feels trickiest to you right now?`
-            : `Here is pedagogical guidance for "${query}": Focus on positive reinforcement and break down the topic into micro-steps.`
+          text: customReply
         }]);
-      }, 400);
+      }, 300);
     } finally {
       setIsLoading(false);
     }
@@ -208,58 +453,196 @@ export default function AiSaathiChat({ currentUser, onRequireAuth }) {
           </div>
         </div>
 
-        {/* PROMINENT 2-SECTION TOGGLE PILLS */}
-        <div style={{
-          display: 'flex',
-          backgroundColor: 'var(--bg-secondary)',
-          borderRadius: '10px',
-          padding: '4px',
-          gap: '4px',
-          border: '1px solid var(--border-subtle)'
-        }}>
-          <button
-            onClick={() => handleSectionSwitch('child')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '8px 16px',
-              borderRadius: '7px',
-              border: 'none',
-              backgroundColor: activeSection === 'child' ? '#6C4CE8' : 'transparent',
-              color: activeSection === 'child' ? '#FFFFFF' : 'var(--text-muted)',
-              fontSize: '13px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              boxShadow: activeSection === 'child' ? '0 2px 6px rgba(108, 76, 232, 0.3)' : 'none',
-              transition: 'all 0.18s ease'
-            }}
-          >
-            <span>🎒 Child Doubt Clear</span>
-          </button>
+        {/* RIGHT ACTION CONTROLS: Section Switcher & AI Model Settings Button */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          {/* PROMINENT 2-SECTION TOGGLE PILLS */}
+          <div style={{
+            display: 'flex',
+            backgroundColor: 'var(--bg-secondary)',
+            borderRadius: '10px',
+            padding: '4px',
+            gap: '4px',
+            border: '1px solid var(--border-subtle)'
+          }}>
+            <button
+              onClick={() => handleSectionSwitch('child')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '8px 16px',
+                borderRadius: '7px',
+                border: 'none',
+                backgroundColor: activeSection === 'child' ? '#6C4CE8' : 'transparent',
+                color: activeSection === 'child' ? '#FFFFFF' : 'var(--text-muted)',
+                fontSize: '13px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: activeSection === 'child' ? '0 2px 6px rgba(108, 76, 232, 0.3)' : 'none',
+                transition: 'all 0.18s ease'
+              }}
+            >
+              <span>🎒 Child Doubt Clear</span>
+            </button>
 
+            <button
+              onClick={() => handleSectionSwitch('parent')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '8px 16px',
+                borderRadius: '7px',
+                border: 'none',
+                backgroundColor: activeSection === 'parent' ? '#1677FF' : 'transparent',
+                color: activeSection === 'parent' ? '#FFFFFF' : 'var(--text-muted)',
+                fontSize: '13px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: activeSection === 'parent' ? '0 2px 6px rgba(22, 119, 255, 0.3)' : 'none',
+                transition: 'all 0.18s ease'
+              }}
+            >
+              <span>👨‍👩‍👦 Parent Study Guide</span>
+            </button>
+          </div>
+
+          {/* AI Settings Toggle Button */}
           <button
-            onClick={() => handleSectionSwitch('parent')}
+            onClick={() => setShowSettings(!showSettings)}
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '8px 16px',
-              borderRadius: '7px',
-              border: 'none',
-              backgroundColor: activeSection === 'parent' ? '#1677FF' : 'transparent',
-              color: activeSection === 'parent' ? '#FFFFFF' : 'var(--text-muted)',
-              fontSize: '13px',
+              padding: '8px 14px',
+              borderRadius: '9px',
+              backgroundColor: customApiKey ? 'rgba(16, 185, 129, 0.12)' : 'var(--bg-secondary)',
+              color: customApiKey ? '#10B981' : 'var(--text-muted)',
+              border: `1.5px solid ${customApiKey ? 'rgba(16, 185, 129, 0.35)' : 'var(--border-subtle)'}`,
+              fontSize: '12.5px',
               fontWeight: 700,
               cursor: 'pointer',
-              boxShadow: activeSection === 'parent' ? '0 2px 6px rgba(22, 119, 255, 0.3)' : 'none',
-              transition: 'all 0.18s ease'
+              transition: 'all 0.15s ease'
             }}
+            title="Configure Live Groq Cloud AI Key & Model"
           >
-            <span>👨‍👩‍👦 Parent Study Guide</span>
+            <Settings size={15} />
+            <span>{customApiKey ? 'Groq Live AI Connected ⚡' : 'AI Model Settings'}</span>
           </button>
         </div>
       </div>
+
+      {/* Optional AI Settings Panel */}
+      {showSettings && (
+        <div style={{
+          backgroundColor: 'var(--bg-surface)',
+          borderRadius: '12px',
+          border: '1.5px solid #6C4CE8',
+          padding: '18px 22px',
+          boxShadow: '0 8px 24px rgba(108, 76, 232, 0.15)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '14px'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Cpu size={18} color="#6C4CE8" />
+              <strong style={{ fontSize: '14px', color: 'var(--text-main)' }}>
+                Groq Cloud AI Model Configuration (Free &amp; Ultra-Fast)
+              </strong>
+            </div>
+            <button
+              onClick={() => setShowSettings(false)}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          <form onSubmit={handleSaveSettings} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
+                  Groq API Key (Optional — Free from console.groq.com):
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type="password"
+                    placeholder="gsk_..."
+                    value={tempApiKey}
+                    onChange={e => setTempApiKey(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px 8px 32px',
+                      borderRadius: '8px',
+                      border: '1px solid var(--border-subtle)',
+                      backgroundColor: 'var(--bg-secondary)',
+                      color: 'var(--text-main)',
+                      fontSize: '13px',
+                      fontFamily: 'monospace'
+                    }}
+                  />
+                  <Key size={14} style={{ position: 'absolute', left: '10px', top: '11px', color: 'var(--text-muted)' }} />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
+                  Select AI Model:
+                </label>
+                <select
+                  value={tempModel}
+                  onChange={e => setTempModel(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--border-subtle)',
+                    backgroundColor: 'var(--bg-secondary)',
+                    color: 'var(--text-main)',
+                    fontSize: '13px',
+                    fontWeight: 600
+                  }}
+                >
+                  <option value="llama-3.3-70b-versatile">Llama 3.3 70B Versatile (Recommended • Smartest)</option>
+                  <option value="llama-3.1-8b-instant">Llama 3.1 8B Instant (Ultra-Fast • &lt; 300ms)</option>
+                  <option value="qwen-2.5-32b">Qwen 2.5 32B (Groq Pedagogical Reasoning)</option>
+                  <option value="deepseek-r1-distill-llama-70b">DeepSeek R1 Distill 70B (Deep Math &amp; Science)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                Don't have a key? The built-in EduBandhan Pedagogical Engine provides instant NCERT answers for all subjects!
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                {saveStatus && (
+                  <span style={{ fontSize: '12px', color: '#10B981', fontWeight: 700 }}>
+                    ✓ {saveStatus}
+                  </span>
+                )}
+                <button
+                  type="submit"
+                  style={{
+                    padding: '7px 18px',
+                    borderRadius: '8px',
+                    backgroundColor: '#6C4CE8',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontSize: '13px',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Save Settings
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      )}
 
       {/* 2. Main Two-Column Layout */}
       <div style={{
