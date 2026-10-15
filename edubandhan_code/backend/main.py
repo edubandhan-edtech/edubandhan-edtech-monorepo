@@ -160,7 +160,8 @@ def legacy_ui_redirect():
 CLIENT_TABS = {
     "organization", "super_admin", "admin", "teacher", "parent_hub",
     "management", "students", "fees", "kiosk", "sockets", "consultation",
-    "leaves", "quiz", "aichat", "attendance_view", "overview", "parent"
+    "leaves", "quiz", "aichat", "attendance_view", "overview", "parent",
+    "suraksha_pass", "suraksha-pass"
 }
 
 @app.get("/{tab_name}")

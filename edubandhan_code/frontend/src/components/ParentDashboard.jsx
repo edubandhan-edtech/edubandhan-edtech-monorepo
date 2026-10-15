@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   CheckCircle2,
   CreditCard,
@@ -14,11 +14,18 @@ import {
   BookOpen,
   ChevronRight,
   Megaphone,
-  CalendarCheck
+  CalendarCheck,
+  ShieldCheck,
+  QrCode,
+  Lock,
+  Car
 } from 'lucide-react';
 import NoticeBoardHub from './NoticeBoardHub';
+import GuardianGatePassModal from './GuardianGatePassModal';
 
 export default function ParentDashboard({ onSwitchTab, onRequireAuth, currentUser }) {
+  const [isGatePassOpen, setIsGatePassOpen] = useState(false);
+
   const childInfo = {
     name: currentUser?.child_name || "Aarav Sharma",
     grade: currentUser?.child_class || "Class 8 - Section B",
@@ -253,6 +260,69 @@ export default function ParentDashboard({ onSwitchTab, onRequireAuth, currentUse
               }}
             >
               Pay Now &rarr;
+            </button>
+          </div>
+        </div>
+
+        {/* 4. Safe Guardian Gate Pass Card (Anti-Proxy Child Security) */}
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(21, 94, 239, 0.06) 0%, rgba(2, 132, 199, 0.1) 100%)',
+          borderRadius: '12px',
+          border: '1.5px solid rgba(21, 94, 239, 0.3)',
+          padding: '20px',
+          boxShadow: '0 4px 14px rgba(21, 94, 239, 0.08)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          gap: '12px'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <ShieldCheck size={16} color="#155EEF" />
+              <span>Safe Dismissal Pass</span>
+            </span>
+            <span style={{
+              backgroundColor: '#ECFDF3',
+              color: '#027A48',
+              padding: '3px 8px',
+              borderRadius: '999px',
+              fontSize: '11px',
+              fontWeight: 800,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}>
+              <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+              Active Today
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: 0 }}>Authorized Release</p>
+              <p style={{ fontSize: '13.5px', fontWeight: 800, color: 'var(--text-main)', margin: '2px 0 0' }}>
+                Pooja Sharma (Mother)
+              </p>
+            </div>
+            <button
+              onClick={() => setIsGatePassOpen(true)}
+              style={{
+                background: 'linear-gradient(135deg, #155EEF 0%, #004EEB 100%)',
+                color: '#FFFFFF',
+                border: 'none',
+                padding: '7px 14px',
+                borderRadius: '8px',
+                fontSize: '12px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                boxShadow: '0 2px 8px rgba(21, 94, 239, 0.35)'
+              }}
+            >
+              <QrCode size={14} />
+              <span>Open Gate Pass</span>
             </button>
           </div>
         </div>
@@ -571,6 +641,22 @@ export default function ParentDashboard({ onSwitchTab, onRequireAuth, currentUse
         currentUser={currentUser}
         activeRole="parent"
         onRequireAuth={onRequireAuth}
+      />
+
+      {/* Safe Guardian Dismissal Gate Pass Modal */}
+      <GuardianGatePassModal
+        isOpen={isGatePassOpen}
+        onClose={() => setIsGatePassOpen(false)}
+        currentUser={currentUser}
+        onOpenViewer={(passUrl) => {
+          if (passUrl && typeof window !== 'undefined') {
+            try {
+              const url = new URL(passUrl, window.location.origin);
+              window.history.pushState({ tab: 'suraksha_pass' }, '', url.pathname + url.search);
+            } catch (e) { }
+          }
+          onSwitchTab('suraksha_pass');
+        }}
       />
 
     </div>

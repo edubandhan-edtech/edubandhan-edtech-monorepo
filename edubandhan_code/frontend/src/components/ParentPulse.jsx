@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Smartphone, 
   MapPin, 
@@ -10,11 +10,15 @@ import {
   PhoneCall,
   User,
   Flame,
-  Award
+  Award,
+  QrCode
 } from 'lucide-react';
+import GuardianGatePassModal from './GuardianGatePassModal';
 
 export default function ParentPulse({ currentUser, onSwitchTab }) {
+  const [isGatePassOpen, setIsGatePassOpen] = useState(false);
   const guardianName = currentUser?.name || currentUser?.full_name || "Ramesh Sharma";
+
   const studentName = currentUser?.child_name || "Aarav Sharma";
 
   const days = [
@@ -63,11 +67,32 @@ export default function ParentPulse({ currentUser, onSwitchTab }) {
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           <span className="badge badge-emerald">
             <CheckCircle2 size={13} />
             <span>Checked In (08:14 AM Today)</span>
           </span>
+
+          <button
+            onClick={() => setIsGatePassOpen(true)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 14px',
+              background: 'linear-gradient(135deg, #155EEF 0%, #004EEB 100%)',
+              color: '#FFFFFF',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '12px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              boxShadow: '0 2px 8px rgba(21, 94, 239, 0.35)'
+            }}
+          >
+            <QrCode size={14} />
+            <span>Safe Gate Pass</span>
+          </button>
         </div>
       </div>
 
@@ -193,6 +218,23 @@ export default function ParentPulse({ currentUser, onSwitchTab }) {
           </div>
         </div>
       </div>
+
+      {/* Safe Guardian Dismissal Gate Pass Modal */}
+      <GuardianGatePassModal
+        isOpen={isGatePassOpen}
+        onClose={() => setIsGatePassOpen(false)}
+        currentUser={currentUser}
+        onOpenViewer={(passUrl) => {
+          if (passUrl && typeof window !== 'undefined') {
+            try {
+              const url = new URL(passUrl, window.location.origin);
+              window.history.pushState({ tab: 'suraksha_pass' }, '', url.pathname + url.search);
+            } catch (e) { }
+          }
+          onSwitchTab('suraksha_pass');
+        }}
+      />
+
     </div>
   );
 }

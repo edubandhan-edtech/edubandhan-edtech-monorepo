@@ -23,6 +23,7 @@ import RoleSwitchModal from './components/RoleSwitchModal';
 import SuperAdminHUD from './components/SuperAdminHUD';
 import ChildAttendanceView from './components/ChildAttendanceView';
 import OrganizationHierarchy from './components/OrganizationHierarchy';
+import SurakshaPassViewer from './components/SurakshaPassViewer';
 import { CheckCircle2, X, Clock, LogIn, ShieldAlert, AlertTriangle } from 'lucide-react';
 
 const VALID_TABS = [
@@ -42,7 +43,8 @@ const VALID_TABS = [
   'quiz',
   'aichat',
   'attendance_view',
-  'organization'
+  'organization',
+  'suraksha_pass'
 ];
 
 // 60-Minute Inactivity Session Policy (with 60-second warning countdown)
@@ -943,6 +945,13 @@ export default function App() {
             {activeTab === 'attendance_view' && (
               <ChildAttendanceView
                 currentUser={currentUser}
+                onSwitchTab={navigateToTab}
+              />
+            )}
+
+            {activeTab === 'suraksha_pass' && (
+              <SurakshaPassViewer
+                onBack={() => navigateToTab('parent_hub')}
                 onSwitchTab={navigateToTab}
               />
             )}
