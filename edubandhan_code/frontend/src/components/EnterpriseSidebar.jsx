@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   CalendarCheck,
   Network,
+  Globe,
   X
 } from 'lucide-react';
 
@@ -142,6 +143,13 @@ export default function EnterpriseSidebar({
       icon: Layers,
       targetTab: 'overview',
       badge: '9 Features'
+    },
+    {
+      id: 'portfolio',
+      label: 'Portfolio & About',
+      icon: Globe,
+      targetTab: 'portfolio',
+      badge: 'Home'
     }
   ];
 

@@ -16,7 +16,7 @@ from backend.config import settings
 
 app = FastAPI(
     title="EduBandhan (एडूबंधन) — Master API",
-    description="The Sacred Bond Connecting Child, Parent & School • Multi-Tenant AI Smart School Ecosystem",
+    description="The Sacred Bond Connecting Child, Parent & Educational Organization • Multi-Tenant AI Smart School Ecosystem",
     version="1.0.0"
 )
 
@@ -161,7 +161,7 @@ CLIENT_TABS = {
     "organization", "super_admin", "admin", "teacher", "parent_hub",
     "management", "students", "fees", "kiosk", "sockets", "consultation",
     "leaves", "quiz", "aichat", "attendance_view", "overview", "parent",
-    "suraksha_pass", "suraksha-pass"
+    "suraksha_pass", "suraksha-pass", "portfolio"
 }
 
 @app.get("/{tab_name}")

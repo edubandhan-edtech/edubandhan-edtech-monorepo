@@ -24,9 +24,11 @@ import SuperAdminHUD from './components/SuperAdminHUD';
 import ChildAttendanceView from './components/ChildAttendanceView';
 import OrganizationHierarchy from './components/OrganizationHierarchy';
 import SurakshaPassViewer from './components/SurakshaPassViewer';
+import EduBandhanPortfolio from './components/EduBandhanPortfolio';
 import { CheckCircle2, X, Clock, LogIn, ShieldAlert, AlertTriangle } from 'lucide-react';
 
 const VALID_TABS = [
+  'portfolio',
   'overview',
   'super_admin',
   'admin',
@@ -137,7 +139,7 @@ export default function App() {
   // Helper to get clean path-based URL with slashes (/xxx) instead of #xxx
   const getTabUrl = (tab) => {
     const base = getAppBasePath();
-    if (!tab || tab === 'overview') {
+    if (!tab || tab === 'portfolio') {
       return (base || '') + '/' + (window.location.search || '');
     }
     return `${base}/${tab}${window.location.search || ''}`;
@@ -164,7 +166,7 @@ export default function App() {
       }
     } catch (e) { }
 
-    return 'overview';
+    return 'portfolio';
   };
 
   // Determine initial active tab from the URL path
@@ -188,6 +190,7 @@ export default function App() {
 
   const getPortalTitle = (tab) => {
     switch (tab) {
+      case 'portfolio': return 'EduBandhan Portfolio & Product Showcase';
       case 'super_admin': return 'Super Admin Control Center';
       case 'admin': return 'School Admin Dashboard';
       case 'teacher': return 'Teacher Workspace (Daily Operations)';
@@ -498,17 +501,30 @@ export default function App() {
         position: 'relative'
       }}
     >
-      {/* Mobile Drawer Backdrop Overlay */}
-      {isMobileNavOpen && (
-        <div 
-          className="sidebar-mobile-backdrop"
-          onClick={() => setIsMobileNavOpen(false)}
-          aria-hidden="true"
-        />
-      )}
+      {/* Portfolio Landing Page (Default View) vs Enterprise Portal Shell */}
+      {activeTab === 'portfolio' ? (
+        <div style={{ width: '100vw', height: '100vh', overflowY: 'auto' }}>
+          <EduBandhanPortfolio
+            onLaunchPortal={(targetTab = 'overview') => navigateToTab(targetTab)}
+            theme={theme}
+            onToggleTheme={handleToggleTheme}
+            currentUser={currentUser}
+            onOpenAuth={handleOpenAuth}
+          />
+        </div>
+      ) : (
+        <>
+          {/* Mobile Drawer Backdrop Overlay */}
+          {isMobileNavOpen && (
+            <div 
+              className="sidebar-mobile-backdrop"
+              onClick={() => setIsMobileNavOpen(false)}
+              aria-hidden="true"
+            />
+          )}
 
-      {/* 1. Deep Navy Enterprise SaaS Sidebar */}
-      <EnterpriseSidebar
+          {/* 1. Deep Navy Enterprise SaaS Sidebar */}
+          <EnterpriseSidebar
         activeTab={activeTab}
         onSwitchTab={navigateToTab}
         activeRole={activeRole}
@@ -974,6 +990,8 @@ export default function App() {
           />
         </div>
       </div>
+      </>
+      )}
 
       {/* Auth Portal Modal */}
       <AuthModal

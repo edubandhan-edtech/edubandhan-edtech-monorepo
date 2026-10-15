@@ -36,7 +36,7 @@ BANNER = r"""
   ███████╗██████╔╝╚██████╔╝██████╔╝██║  ██║██║ ╚████║██████╔╝██║  ██║██║  ██║██║ ╚████║
   ╚══════╝╚═════╝  ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝
 =============================================================================
-              The Sacred Bond Connecting Child, Parent & School
+              The Sacred Bond Connecting Child, Parent & Educational Organization
        AI Smart School Ecosystem • Kiosk Attendance • Facial Verification
 =============================================================================
 """
@@ -106,15 +106,42 @@ def check_frontend_build(force_rebuild: bool = False):
     else:
         print(f"[+] ✅ React Frontend distribution is up to date: {dist_dir}")
 
-def ensure_port_available(port: int):
-    """Ensure the target port is available or alert user cleanly."""
+def ensure_port_available(port: int) -> int:
+    """Ensure the target port is available. If occupied, cleanly terminates
+    any stale process bound to that port or falls back to an open port."""
     import socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         in_use = s.connect_ex(('127.0.0.1', port)) == 0
-        if in_use:
-            print(f"[!] ⚠️ Warning: Port {port} appears to already be occupied by another process.")
-            print(f"    If EduBandhan is already running in background, access it directly at http://localhost:{port}/web_app/edubandhan")
-            print(f"    Or specify another port: python run.py --port {port + 1}\n")
+        if not in_use:
+            return port
+
+    print(f"[*] Port {port} is occupied. Attempting to free port from stale process...")
+    freed = False
+    if sys.platform == "win32":
+        try:
+            cmd = f'powershell -Command "(Get-NetTCPConnection -LocalPort {port} -ErrorAction SilentlyContinue).OwningProcess"'
+            output = subprocess.check_output(cmd, shell=True, text=True).strip()
+            pids = [int(p) for p in output.split() if p.isdigit()]
+            for pid in pids:
+                if pid > 0 and pid != os.getpid():
+                    print(f"[*] Terminating conflicting process PID {pid} on port {port}...")
+                    subprocess.run(f"taskkill /F /PID {pid}", shell=True, capture_output=True)
+            time.sleep(1)
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s2:
+                freed = s2.connect_ex(('127.0.0.1', port)) != 0
+        except Exception:
+            pass
+
+    if freed:
+        print(f"[+] Successfully released port {port}!\n")
+        return port
+    else:
+        for alt_port in range(port + 1, port + 10):
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s3:
+                if s3.connect_ex(('127.0.0.1', alt_port)) != 0:
+                    print(f"[+] Switched to available port {alt_port}.\n")
+                    return alt_port
+    return port
 
 def run_database_migration():
     """Run database schema migration using migrate.py."""
@@ -172,7 +199,7 @@ def main():
     check_frontend_build(force_rebuild=args.build)
 
     # 3. Port check
-    ensure_port_available(args.port)
+    args.port = ensure_port_available(args.port)
 
     # 4. Database migration or verification
     if args.migrate:
