@@ -30,11 +30,11 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, intendedFea
     }
   }, [initialMode, isOpen]);
   
-  // Sign In inputs
-  const [identifier, setIdentifier] = useState('principal@dps-rourkela.edu.in');
-  const [password, setPassword] = useState('edubandhan2026');
-  const [adminId, setAdminId] = useState('ADM-DPS-001');
-  const [admissionNo, setAdmissionNo] = useState('DPS-2026-0801');
+  // Sign In inputs (empty defaults for security)
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
+  const [adminId, setAdminId] = useState('');
+  const [admissionNo, setAdmissionNo] = useState('');
 
   // Register inputs
   const [fullName, setFullName] = useState('');
@@ -159,55 +159,6 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, intendedFea
   }, [adminId, role, mode]);
 
   if (!isOpen) return null;
-
-  // Preset demo credentials for quick 1-click test across the 4 Hierarchy Roles
-  const demoAccounts = {
-    super_admin: {
-      identifier: 'superadmin@edubandhan.com',
-      password: 'edubandhan2026',
-      adminId: '',
-      admissionNo: '',
-      label: '⚡ Super Admin (Owner)',
-      target: 'super_admin'
-    },
-    admin: {
-      identifier: 'principal@dps-rourkela.edu.in',
-      password: 'edubandhan2026',
-      adminId: 'ADM-DPS-001',
-      admissionNo: '',
-      label: '👑 Principal (Admin HUD)',
-      target: 'admin'
-    },
-    teacher: {
-      identifier: 'sunita.sharma@dps-rourkela.edu.in',
-      password: 'edubandhan2026',
-      adminId: 'ADM-DPS-001',
-      admissionNo: '',
-      label: '👩‍🏫 Teacher (Leaves)',
-      target: 'leaves'
-    },
-    parent: {
-      identifier: 'rajesh.sharma@gmail.com',
-      password: 'edubandhan2026',
-      adminId: 'ADM-DPS-001',
-      admissionNo: 'DPS-2026-0801',
-      label: '👨‍👩‍👦 Parent (Parent Hub)',
-      target: 'parent_hub'
-    }
-  };
-
-  const applyDemo = (key) => {
-    setRole(key);
-    setErrorMsg('');
-    setSuccessMsg('');
-    const acc = demoAccounts[key];
-    if (acc) {
-      setIdentifier(acc.identifier);
-      setPassword(acc.password);
-      setAdminId(acc.adminId);
-      setAdmissionNo(acc.admissionNo);
-    }
-  };
 
   const getTargetTabForRole = (userRole) => {
     const r = (userRole || '').toUpperCase();
@@ -583,7 +534,6 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, intendedFea
                     setRole(r.id);
                     setErrorMsg('');
                     setSuccessMsg('');
-                    applyDemo(r.id);
                   }}
                   style={{
                     border: isSelected ? '1.5px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.1)',
@@ -605,41 +555,6 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, intendedFea
             })}
           </div>
         </div>
-
-        {/* 1-Click Quick Demo Autofill Notice */}
-        {mode === 'signin' && (
-          <div style={{
-            background: 'rgba(56, 189, 248, 0.08)',
-            border: '1px dashed rgba(56, 189, 248, 0.3)',
-            borderRadius: '8px',
-            padding: '8px 12px',
-            marginBottom: '14px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between'
-          }}>
-            <div style={{ fontSize: '11px', color: '#bae6fd', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Sparkles size={13} color="#38bdf8" />
-              <span>Autofilled credentials for <strong>{demoAccounts[role]?.label}</strong></span>
-            </div>
-            <button
-              type="button"
-              onClick={() => applyDemo(role)}
-              style={{
-                background: 'rgba(56, 189, 248, 0.2)',
-                border: 'none',
-                color: '#38bdf8',
-                borderRadius: '5px',
-                padding: '3px 8px',
-                fontSize: '10.5px',
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
-            >
-              Reset
-            </button>
-          </div>
-        )}
 
         {/* Live Feedback Banners */}
         {errorMsg && (
@@ -693,7 +608,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, intendedFea
                     type="text"
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
-                    placeholder="e.g. principal@dps-rourkela.edu.in or rajesh.sharma@gmail.com"
+                    placeholder={role === 'parent' ? "Enter registered mobile number or email" : "Enter institutional email or username"}
                     required
                     style={{
                       width: '100%',
@@ -720,6 +635,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, intendedFea
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter account password"
                     required
                     style={{
                       width: '100%',
@@ -754,7 +670,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, intendedFea
                       type="text"
                       value={adminId}
                       onChange={(e) => setAdminId(e.target.value.toUpperCase())}
-                      placeholder="e.g. ADM-DPS-001"
+                      placeholder="Enter School Admin ID (e.g. ADM-...)"
                       required
                       style={{
                         width: '100%',
@@ -790,7 +706,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess, intendedFea
                       type="text"
                       value={admissionNo}
                       onChange={(e) => setAdmissionNo(e.target.value.toUpperCase())}
-                      placeholder="e.g. DPS-2026-0801"
+                      placeholder="Enter Student Admission Number"
                       required
                       style={{
                         width: '100%',
