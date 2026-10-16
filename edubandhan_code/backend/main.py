@@ -11,7 +11,7 @@ if sys.platform == "win32":
     except Exception:
         pass
 
-from backend.routers import auth, admin, kiosk, parent, teacher, chat, notices, super_admin, hierarchy
+from backend.routers import auth, admin, kiosk, parent, teacher, chat, notices, super_admin, hierarchy, demo
 from backend.config import settings
 
 app = FastAPI(
@@ -40,6 +40,7 @@ app.include_router(teacher.router)
 app.include_router(chat.router)
 app.include_router(chat.api_router)
 app.include_router(notices.router)
+app.include_router(demo.router)
 
 # Mount current directory and React frontend build assets
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
